@@ -180,15 +180,8 @@ int main(int argc, char *argv[])
         }
 
         TriMesh cubeProj;
-        for (auto tri : cube.getTriangles())
-        {
-            Point toto(0, 0, 20);
-            tri.setA(tri.getA() + toto);
-            tri.setB(tri.getB() + toto);
-            tri.setC(tri.getC() + toto);
-            cubeProj.addTriangle(tri);
-        } 
-        cubeProj = shader.computeShader(cubeProj);
+
+        cubeProj = shader.computeShader(cube);
         cubeProj = camera.worldTransform(cubeProj);
         clip.setPlane(pNear, pNearNormal);
         cubeProj = clip.clipObject(cubeProj);
