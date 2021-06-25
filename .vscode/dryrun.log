@@ -1,0 +1,14 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/nico/projects/3Dengine2'
+g++ -Wall -g -c Point.cpp
+g++ -Wall -g -c Triangle.cpp
+g++ -Wall -g -c TriMesh.cpp
+g++ -Wall -g -c Matrix.cpp 
+g++ -Wall -g -c Loader.cpp
+g++ -Wall -g -c Camera.cpp 
+g++ -Wall -g -c Clipper.cpp
+g++ -Wall -g -c Shader.cpp 
+g++ -Wall -g -c main.cpp -lSDL2main -lSDL2
+g++ -Wall -Werror -g -o prog main.o Camera.o Matrix.o TriMesh.o Point.o Triangle.o Loader.o Clipper.o Shader.o -lSDL2main -lSDL2
+make: Leaving directory '/home/nico/projects/3Dengine2'
+ 
