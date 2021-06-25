@@ -195,7 +195,6 @@ int main(int argc, char *argv[])
         cubeProj = camera.ndcTransform(cubeProj, height, width);
 
         cubeProj = camera.viewPortTransform(cubeProj, height, width);
-        //cout << cubeProj.getnTriangles() <<endl;
                 
         clip.setPlane(pLeft, pLeftNormal);
         cubeProj = clip.clipObject(cubeProj);
@@ -229,8 +228,7 @@ int main(int argc, char *argv[])
         */
         }
         SDL_RenderPresent(pRenderer);
-        //SDL_Delay(1);
-        //cout<<"yaw:"<<fYaw<<endl;
+
 
         uint32_t currTime = SDL_GetTicks();
         elapsedTime = (currTime - startTime) / 1000.0;
@@ -241,9 +239,8 @@ int main(int argc, char *argv[])
         title.append(" FPS");
         const char *titleConverted = title.c_str();
         SDL_SetWindowTitle(pWindow, titleConverted);
-        //cout << double(counter) / elapsedTime << " FPS" << endl;
 
-        //translater += 0.001;
+
     }
     SDL_DestroyRenderer(pRenderer);
     SDL_DestroyWindow(pWindow);

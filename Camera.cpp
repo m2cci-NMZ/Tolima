@@ -57,44 +57,6 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
     return viewMatrix;
 }
 
-void Camera::makePointAt()
-{
-
-    Matrix rot = this->makerotationZMatrix(yaw);
-    Point newTarget;
-    rot.multiplyVector(target, &newTarget);
-
-    // Calculate new forward direction
-    Point newForward = newTarget - position;
-    newForward.normalize();
-    //cout << position.getX() << " " << position.getY() << " " << position.getZ() << endl;
-
-    // Calculate new Up direction
-    Point a = newForward * up.dotProduct(newForward);
-    Point newUp = up - a;
-    newUp.normalize();
-
-    // New Right direction is easy, its just cross product
-    Point newRight = newUp.crossProduct(newForward);
-
-    // Construct Dimensioning and Translation Matrix
-    pointAt.setValue(0, 0, newRight.getX());
-    pointAt.setValue(0, 1, newRight.getY());
-    pointAt.setValue(0, 2, newRight.getZ());
-    pointAt.setValue(0, 3, 0.0f);
-    pointAt.setValue(1, 0, newUp.getX());
-    pointAt.setValue(1, 1, newUp.getY());
-    pointAt.setValue(1, 2, newUp.getZ());
-    pointAt.setValue(1, 3, 0.0);
-    pointAt.setValue(2, 0, newForward.getX());
-    pointAt.setValue(2, 1, newForward.getY());
-    pointAt.setValue(2, 2, newForward.getZ());
-    pointAt.setValue(2, 3, 0.0);
-    pointAt.setValue(3, 0, position.getX());
-    pointAt.setValue(3, 1, position.getY());
-    pointAt.setValue(3, 2, position.getZ());
-    pointAt.setValue(3, 3, 1.0);
-}
 void Camera::turn(float _yaw)
 {
     yaw = _yaw;
@@ -143,13 +105,8 @@ void Camera::transform(Point in, Point *out)
 {
     
     Matrix fpsMatrix = this->makeFPSTransform(position, pitch, yaw);
-    //fpsMatrix.invertRotMatrix(fpsMatrix);
     fpsMatrix.multiplyVector(in, out);
 
-
-    //this->makePointAt();
-    //pointAt.invertRotMatrix(pointAt);
-    //pointAt.multiplyVector(in, out);
 }
 Point Camera::getPosition()
 {
@@ -184,12 +141,6 @@ TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
     float fAspectRatio = float(width) / float(height);
     float fFovRad = 1.0 / tanf(fFov * 0.5 / 180.0 * 3.14159);
 
-    /*matProj.setValue(0, 0, fFovRad / fAspectRatio);
-    matProj.setValue(1, 1, fFovRad);
-    matProj.setValue(2, 2, (fFar + fNear) / (fFar - fNear));
-    matProj.setValue(3, 2, (2.0 * fFar * fNear) / (fNear - fFar));
-    matProj.setValue(2, 3, 1.0);
-    matProj.setValue(3, 3, 0.0);*/
 
     matProj.setValue(0, 0, fFovRad / fAspectRatio);
     matProj.setValue(1, 1, fFovRad);
@@ -204,15 +155,15 @@ TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
         Triangle t;
         t.setLum(tri.getLum());
 
-        // Project to view and scale for perspective
+        // Project to view 
         matProj.multiplyVector(tri.getA(), &p);
-        //p = p / p.getW();
+
         t.setA(p);
         matProj.multiplyVector(tri.getB(), &p);
-        //p = p / p.getW();
+
         t.setB(p);
         matProj.multiplyVector(tri.getC(), &p);
-        //p = p / p.getW();
+
         t.setC(p);
         out.addTriangle(t);
     }
@@ -235,18 +186,6 @@ TriMesh Camera::viewPortTransform(TriMesh in, int height, int width)
             Point p;
             t.setLum(tri.getLum());
             //scale to window size
-
-            /*p.setX((tri.getA().getX() + 1) * 0.5 * float(width));
-            p.setY((tri.getA().getY() + 1) * 0.5 * float(height));
-            t.setA(p);
-
-            p.setX((tri.getB().getX() + 1) * 0.5 * float(width));
-            p.setY((tri.getB().getY() + 1) * 0.5 * float(height));
-            t.setB(p);
-
-            p.setX((tri.getC().getX() + 1) * 0.5 * float(width));
-            p.setY((tri.getC().getY() + 1) * 0.5 * float(height));
-            t.setC(p);*/
 
             p.setX(tri.getA().getX() * float(width)/(2.0*tri.getA().getW())+(float(width)/2.0));
             p.setY(tri.getA().getY() * float(height)/(2.0*tri.getA().getW())+(float(height)/2.0));

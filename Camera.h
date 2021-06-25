@@ -21,7 +21,6 @@ public:
     void moveUp(float speed);
     void moveDown(float speed);
     Matrix makerotationZMatrix(float rot);
-    Matrix makePointAt(Point pos, Point target, Point up);
     Matrix makeFPSTransform(Point position, float pitch, float yaw);
 
     void transform(Point in, Point* out);
