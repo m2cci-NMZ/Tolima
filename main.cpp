@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     Shader shader;
 
-    string f = "axis.obj";
+    string f = "teapot.obj";
     Loader loader(f, &cube);
     if (!loader.loadMeshFromFile())
     {
