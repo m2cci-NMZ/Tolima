@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
 
     Shader shader;
 
-    string f = "teapot.obj";
+    string f = "axis.obj";
     Loader loader(f, &cube);
     if (!loader.loadMeshFromFile())
     {
@@ -148,24 +148,24 @@ int main(int argc, char *argv[])
                 switch (events.key.keysym.sym)
                 {
                 case SDLK_q:
-                    fYaw -= elapsedTime * 0.0002;
+                    fYaw += elapsedTime * 0.02;
                     camera.turn(fYaw);
                     break;
                 case SDLK_z:
-                    camera.moveForward(0.1);
+                    camera.moveForward(1);
                     break;
                 case SDLK_s:
-                    camera.moveBackward(0.1);
+                    camera.moveBackward(1);
                     break;
                 case SDLK_d:
-                    fYaw += elapsedTime * 0.0002;
+                    fYaw -= elapsedTime * 0.02;
                     camera.turn(fYaw);
                     break;
                 case SDLK_x:
-                    camera.moveDown(0.1);
+                    camera.moveDown(1);
                     break;
                 case SDLK_w:
-                    camera.moveUp(0.1);
+                    camera.moveUp(1);
                     break;
                 }
 
@@ -210,6 +210,7 @@ int main(int argc, char *argv[])
 
             // Draw Triangles
             SDL_SetRenderDrawColor(pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
+            //SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
             fillTriangle(pRenderer, tri.getA(), tri.getB(), tri.getC());
             SDL_SetRenderDrawColor(pRenderer, 0, 255, 0, 255);
 

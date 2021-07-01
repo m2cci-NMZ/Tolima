@@ -93,6 +93,31 @@ int Clipper::clipAgainstPlane(Triangle in)
     //two points outside,
     else
     {
+        Point p1, p2;
+        if (d1>0){
+            p1=this->intersectPlane(in.getA(), in.getB());
+            p2=this->intersectPlane(in.getA(), in.getC());
+
+            t1.setA(in.getA());
+            t1.setB(p1);
+            t1.setC(p2);
+        }
+        else if (d2>0){
+            p1=this->intersectPlane(in.getA(), in.getB());
+            p2=this->intersectPlane(in.getB(), in.getC());
+
+            t1.setA(p1);
+            t1.setB(in.getB());
+            t1.setC(p2);
+        }
+        else{
+            p1=this->intersectPlane(in.getB(), in.getC());
+            p2=this->intersectPlane(in.getA(), in.getC());
+
+            t1.setA(p2);
+            t1.setB(p1);
+            t1.setC(in.getC());
+        }
         return 1;
     }
     return 0;

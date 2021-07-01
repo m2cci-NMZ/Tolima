@@ -36,6 +36,7 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
     zaxis.setY(-sinPitch);
     zaxis.setZ(cosPitch * cosYaw);
 
+
     Matrix viewMatrix;
     viewMatrix.setValue(0,0,xaxis.getX());
     viewMatrix.setValue(0,1,yaxis.getX());
@@ -60,18 +61,21 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
 void Camera::turn(float _yaw)
 {
     yaw = _yaw;
+    //Matrix rot = this->makerotationYMatrix(yaw);
+    //rot.multiplyVector(target, &target);
 }
 
 void Camera::moveForward(float speed)
-{
-    Point newForward = target - position;
-    position = position + (newForward * speed);
+{   
+
+    position = position + (target * speed);
+
 }
 
 void Camera::moveBackward(float speed)
 {
-    Point newForward = target - position;
-    position = position - (newForward * speed);
+
+    position = position - (target * speed);
 }
 
 void Camera::moveUp(float speed)
@@ -95,6 +99,19 @@ Matrix Camera::makerotationZMatrix(float rot)
     matrix.setValue(0, 0, cosf(rot));
     matrix.setValue(0, 2, sinf(rot));
     matrix.setValue(2, 0, -sinf(rot));
+    matrix.setValue(1, 1, 1.0);
+    matrix.setValue(2, 2, cosf(rot));
+    matrix.setValue(3, 3, 1.0);
+    return matrix;
+}
+
+Matrix Camera::makerotationYMatrix(float rot)
+{
+
+    Matrix matrix;
+    matrix.setValue(0, 0, cosf(rot));
+    matrix.setValue(2, 0, sinf(rot));
+    matrix.setValue(0, 2, -sinf(rot));
     matrix.setValue(1, 1, 1.0);
     matrix.setValue(2, 2, cosf(rot));
     matrix.setValue(3, 3, 1.0);
@@ -181,6 +198,7 @@ TriMesh Camera::viewPortTransform(TriMesh in, int height, int width)
         tri.computeNormal();
 
         if (vCam.dotProduct(tri.getNormal()) < 0)
+        //if (true)
         {
             Triangle t;
             Point p;
