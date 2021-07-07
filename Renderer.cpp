@@ -29,6 +29,7 @@ int Renderer::init()
         SDL_Quit();
         return EXIT_FAILURE;
     }
+    return EXIT_SUCCESS;
 }
 
 void Renderer::eventManager(Camera &camera)
@@ -129,15 +130,17 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
 }
 void Renderer::drawObject(TriMesh object)
 {
-    for (auto tri:object.getTriangles())
+
+    for (auto tri : object.getTriangles())
     {
+        SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
         this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
     }
 }
 int Renderer::closeWindow()
 {
-    SDL_DestroyRenderer(pRenderer);
-    SDL_DestroyWindow(pWindow);
+    SDL_DestroyRenderer(this->pRenderer);
+    SDL_DestroyWindow(this->pWindow);
     SDL_Quit();
     return EXIT_SUCCESS;
 }
@@ -188,6 +191,9 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         clip.setPlane(pDown, pDownNormal);
         proj = clip.clipObject(proj);
+        SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(this->pRenderer);
         this->drawObject(proj);
+        SDL_RenderPresent(this->pRenderer);
     }
 }
