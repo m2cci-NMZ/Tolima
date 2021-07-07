@@ -20,7 +20,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     Renderer renderer(400,400);
-    renderer.init()
+    renderer.init();
 
 
     TriMesh cube;
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
 
     Clipper clip;
-    render.renderLoop(camera, cube, shader, clipper);
+    renderer.renderLoop(camera, cube, shader, clip);
 
     return renderer.closeWindow();
 }

@@ -20,10 +20,10 @@ class Renderer{
     void setWidth(int width);
     void setHeight(int height);
     void drawTriangle(Point p1, Point p2, Point p3);
-    void drawObject(Trimesh object);
+    void drawObject(TriMesh object);
     int init();
     void play();
     void eventManager(Camera &camera);
-    void renderLoop(Camera camera, TriMesh object);
+    void renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip);
     int closeWindow();
-}
+};

@@ -1,8 +1,11 @@
-prog: main.o Matrix.o TriMesh.o Point.o Triangle.o Loader.o Camera.o Clipper.o Shader.o
-	g++ -Wall -Werror -g -o prog main.o Camera.o Matrix.o TriMesh.o Point.o Triangle.o Loader.o Clipper.o Shader.o -lSDL2main -lSDL2
+prog: main.o Matrix.o TriMesh.o Point.o Triangle.o Loader.o Camera.o Clipper.o Shader.o Renderer.o
+	g++ -Wall -Werror -g -o prog main.o Camera.o Matrix.o TriMesh.o Point.o Triangle.o Loader.o Clipper.o Shader.o Renderer.o -lSDL2main -lSDL2
 
-main.o : main.cpp TriMesh.o Matrix.o Loader.o Camera.o Clipper.o Shader.o
+main.o : main.cpp TriMesh.o Matrix.o Loader.o Camera.o Clipper.o Shader.o Renderer.o
 	g++ -Wall -g -c main.cpp -lSDL2main -lSDL2
+
+Renderer.o : Renderer.cpp TriMesh.o Camera.o Clipper.o Shader.o
+	g++ -Wall -g -c Renderer.cpp
 
 Camera.o: Camera.cpp Point.o Matrix.o TriMesh.o
 	g++ -Wall -g -c Camera.cpp 

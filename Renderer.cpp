@@ -129,7 +129,7 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
 }
 void Renderer::drawObject(TriMesh object)
 {
-    for (auto tri::object.getTriangles())
+    for (auto tri:object.getTriangles())
     {
         this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
     }
@@ -156,20 +156,20 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
     pUpNormal.setY(1.0);
 
     Point pRight, pRightNormal;
-    pRight.setX(float(width));
+    pRight.setX(float(this->windowWidth));
     pRightNormal.setX(-1.0);
 
     Point pDown, pDownNormal;
-    pDown.setY(height);
+    pDown.setY(this->windowHeight);
     pDownNormal.setY(-1.0);
     while (this->isOpen)
     {
         {
-            this->eventManager(&camera);
+            this->eventManager(camera);
         }
         TriMesh proj;
 
-        proj = shader.computeShader(cube);
+        proj = shader.computeShader(object);
         proj = camera.worldTransform(proj);
         clip.setPlane(pNear, pNearNormal);
         proj = clip.clipObject(proj);
@@ -178,7 +178,7 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
         proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
 
         clip.setPlane(pLeft, pLeftNormal);
-        proj = clip.clipObject(cubeProj);
+        proj = clip.clipObject(proj);
 
         clip.setPlane(pUp, pUpNormal);
         proj = clip.clipObject(proj);
