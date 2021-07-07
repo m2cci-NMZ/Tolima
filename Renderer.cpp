@@ -70,7 +70,6 @@ void Renderer::eventManager(Camera &camera)
     }
 }
 
-
 void Renderer::drawTriangle(Point p1, Point p2, Point p3)
 {
     //@todo this should ideally be somwhere else, and just return some sort of list with the coordinates of the pixels that should be colored.
@@ -128,5 +127,69 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
             ty = ty + vy;
             counter = counter + 1;
         }
+    }
+}
+void Renderer::drawObject(TriMesh object)
+{
+    for (auto tri::object.getTriangles())
+    {
+        this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
+    }
+}
+int Renderer::closeWindow()
+{
+    SDL_DestroyRenderer(pRenderer);
+    SDL_DestroyWindow(pWindow);
+    SDL_Quit();
+    return EXIT_SUCCESS;
+}
+
+void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip)
+{
+    //this should be done directly by the Clipper object
+    Point pNear, pNearNormal;
+    pNear.setZ(0.1);
+    pNearNormal.setZ(1.0);
+
+    Point pLeft, pLeftNormal;
+    pLeftNormal.setX(1.);
+
+    Point pUp, pUpNormal;
+    pUpNormal.setY(1.0);
+
+    Point pRight, pRightNormal;
+    pRight.setX(float(width));
+    pRightNormal.setX(-1.0);
+
+    Point pDown, pDownNormal;
+    pDown.setY(height);
+    pDownNormal.setY(-1.0);
+    while (this->isOpen)
+    {
+        {
+            this->eventManager(&camera);
+        }
+        TriMesh proj;
+
+        proj = shader.computeShader(cube);
+        proj = camera.worldTransform(proj);
+        clip.setPlane(pNear, pNearNormal);
+        proj = clip.clipObject(proj);
+        proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
+
+        proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
+
+        clip.setPlane(pLeft, pLeftNormal);
+        proj = clip.clipObject(cubeProj);
+
+        clip.setPlane(pUp, pUpNormal);
+        proj = clip.clipObject(proj);
+
+        clip.setPlane(pRight, pRightNormal);
+        proj = clip.clipObject(proj);
+
+        clip.setPlane(pDown, pDownNormal);
+        proj = clip.clipObject(proj);
+        this->drawObject(proj);
     }
 }
