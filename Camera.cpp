@@ -58,9 +58,9 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
     return viewMatrix;
 }
 
-void Camera::turn(float _yaw)
+void Camera::turn(float speed)
 {
-    yaw = _yaw;
+    yaw += speed;
     //Matrix rot = this->makerotationYMatrix(yaw);
     //rot.multiplyVector(target, &target);
 }

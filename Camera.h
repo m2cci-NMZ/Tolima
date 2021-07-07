@@ -15,7 +15,7 @@ private:
 public:
     Camera();
     void makePointAt();
-    void turn(float _yaw);
+    void turn(float speed);
     void moveForward(float speed);
     void moveBackward(float speed);
     void moveUp(float speed);

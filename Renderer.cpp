@@ -44,8 +44,7 @@ void Renderer::eventManager(Camera &camera)
             switch (this->events.key.keysym.sym)
             {
             case SDLK_q:
-                fYaw += elapsedTime * 0.02;
-                camera.turn(fYaw);
+                camera.turn(0.02);
                 break;
             case SDLK_z:
                 camera.moveForward(1);
@@ -54,8 +53,7 @@ void Renderer::eventManager(Camera &camera)
                 camera.moveBackward(1);
                 break;
             case SDLK_d:
-                fYaw -= elapsedTime * 0.02;
-                camera.turn(fYaw);
+                camera.turn(-0.02);
                 break;
             case SDLK_x:
                 camera.moveDown(1);
