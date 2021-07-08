@@ -19,7 +19,8 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    Renderer renderer(400,400);
+    Renderer renderer(480,720);
+    
     renderer.init();
 
 
@@ -29,18 +30,17 @@ int main(int argc, char *argv[])
 
     Shader shader;
 
+    Clipper clip;
 
-    string f = "teapot.obj";
+
+    string f = argv[1];
+
     Loader loader(f, &cube);
     if (!loader.loadMeshFromFile())
     {
         cube.readfile("exemple.txt");
     }
 
-
-
-
-    Clipper clip;
     renderer.renderLoop(camera, cube, shader, clip);
 
     return renderer.closeWindow();
