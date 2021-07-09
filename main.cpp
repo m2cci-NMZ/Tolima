@@ -31,8 +31,7 @@ int main(int argc, char *argv[])
     Shader shader;
 
     Clipper clip;
-
-
+    
     string f = argv[1];
 
     Loader loader(f, &cube);

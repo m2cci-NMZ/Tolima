@@ -8,6 +8,7 @@ class Camera
 private:
     Point position;
     Point target;
+    Point forward;
     Point up;
     float yaw;
     float pitch;

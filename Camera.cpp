@@ -11,6 +11,7 @@ Camera::Camera()
     Point _position(0, 0, 0);
     up = _up;
     target = _target;
+    forward = _target;
     position = _position;
     Matrix pointAt();
     yaw = 0.0;
@@ -36,24 +37,23 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
     zaxis.setY(-sinPitch);
     zaxis.setZ(cosPitch * cosYaw);
 
-
     Matrix viewMatrix;
-    viewMatrix.setValue(0,0,xaxis.getX());
-    viewMatrix.setValue(0,1,yaxis.getX());
-    viewMatrix.setValue(0,2,zaxis.getX());
+    viewMatrix.setValue(0, 0, xaxis.getX());
+    viewMatrix.setValue(0, 1, yaxis.getX());
+    viewMatrix.setValue(0, 2, zaxis.getX());
 
-    viewMatrix.setValue(1,0,zaxis.getY());
-    viewMatrix.setValue(1,1,yaxis.getY());
-    viewMatrix.setValue(1,2,zaxis.getY());
+    viewMatrix.setValue(1, 0, zaxis.getY());
+    viewMatrix.setValue(1, 1, yaxis.getY());
+    viewMatrix.setValue(1, 2, zaxis.getY());
 
-    viewMatrix.setValue(2,0,xaxis.getZ());
-    viewMatrix.setValue(2,1,yaxis.getZ());
-    viewMatrix.setValue(2,2,zaxis.getZ());
+    viewMatrix.setValue(2, 0, xaxis.getZ());
+    viewMatrix.setValue(2, 1, yaxis.getZ());
+    viewMatrix.setValue(2, 2, zaxis.getZ());
 
-    viewMatrix.setValue(3,0,-xaxis.dotProduct(eye));
-    viewMatrix.setValue(3,1,-yaxis.dotProduct(eye));
-    viewMatrix.setValue(3,2,-zaxis.dotProduct(eye));
-    viewMatrix.setValue(3,3,1.0);
+    viewMatrix.setValue(3, 0, -xaxis.dotProduct(eye));
+    viewMatrix.setValue(3, 1, -yaxis.dotProduct(eye));
+    viewMatrix.setValue(3, 2, -zaxis.dotProduct(eye));
+    viewMatrix.setValue(3, 3, 1.0);
 
     return viewMatrix;
 }
@@ -61,20 +61,17 @@ Matrix Camera::makeFPSTransform(Point eye, float pitch, float yaw)
 void Camera::turn(float speed)
 {
     yaw += speed;
-    //Matrix rot = this->makerotationYMatrix(yaw);
-    //rot.multiplyVector(target, &target);
+    Matrix rot = this->makerotationYMatrix(yaw);
+    rot.multiplyVector(forward, &target);
 }
 
 void Camera::moveForward(float speed)
-{   
-
+{
     position = position + (target * speed);
-
 }
 
 void Camera::moveBackward(float speed)
 {
-
     position = position - (target * speed);
 }
 
@@ -120,10 +117,9 @@ Matrix Camera::makerotationYMatrix(float rot)
 
 void Camera::transform(Point in, Point *out)
 {
-    
+
     Matrix fpsMatrix = this->makeFPSTransform(position, pitch, yaw);
     fpsMatrix.multiplyVector(in, out);
-
 }
 Point Camera::getPosition()
 {
@@ -158,7 +154,6 @@ TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
     float fAspectRatio = float(width) / float(height);
     float fFovRad = 1.0 / tanf(fFov * 0.5 / 180.0 * 3.14159);
 
-
     matProj.setValue(0, 0, fFovRad / fAspectRatio);
     matProj.setValue(1, 1, fFovRad);
     matProj.setValue(2, 2, (fFar + fNear) / (fFar - fNear));
@@ -172,7 +167,7 @@ TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
         Triangle t;
         t.setLum(tri.getLum());
 
-        // Project to view 
+        // Project to view
         matProj.multiplyVector(tri.getA(), &p);
 
         t.setA(p);
@@ -205,16 +200,16 @@ TriMesh Camera::viewPortTransform(TriMesh in, int height, int width)
             t.setLum(tri.getLum());
             //scale to window size
 
-            p.setX(tri.getA().getX() * float(width)/(2.0*tri.getA().getW())+(float(width)/2.0));
-            p.setY(tri.getA().getY() * float(height)/(2.0*tri.getA().getW())+(float(height)/2.0));
+            p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));
+            p.setY(tri.getA().getY() * float(height) / (2.0 * tri.getA().getW()) + (float(height) / 2.0));
             t.setA(p);
 
-            p.setX(tri.getB().getX() * float(width)/(2.0*tri.getB().getW())+(float(width)/2.0));
-            p.setY(tri.getB().getY() * float(height)/(2.0*tri.getB().getW())+(float(height)/2.0));
+            p.setX(tri.getB().getX() * float(width) / (2.0 * tri.getB().getW()) + (float(width) / 2.0));
+            p.setY(tri.getB().getY() * float(height) / (2.0 * tri.getB().getW()) + (float(height) / 2.0));
             t.setB(p);
 
-            p.setX(tri.getC().getX() * float(width)/(2.0*tri.getC().getW())+(float(width)/2.0));
-            p.setY(tri.getC().getY() * float(height)/(2.0*tri.getC().getW())+(float(height)/2.0));
+            p.setX(tri.getC().getX() * float(width) / (2.0 * tri.getC().getW()) + (float(width) / 2.0));
+            p.setY(tri.getC().getY() * float(height) / (2.0 * tri.getC().getW()) + (float(height) / 2.0));
             t.setC(p);
 
             out.addTriangle(t);
