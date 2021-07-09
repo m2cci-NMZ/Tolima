@@ -44,7 +44,7 @@ void Renderer::eventManager(Camera &camera)
         case SDL_KEYDOWN:
             switch (this->events.key.keysym.sym)
             {
-            case SDLK_q:
+            case SDLK_a:
                 camera.turn(0.02);
                 break;
             case SDLK_z:
@@ -53,8 +53,14 @@ void Renderer::eventManager(Camera &camera)
             case SDLK_s:
                 camera.moveBackward(1);
                 break;
-            case SDLK_d:
+            case SDLK_e:
                 camera.turn(-0.02);
+                break;
+            case SDLK_d:
+                camera.moveRight(1);
+                break;
+            case SDLK_q:
+                camera.moveLeft(1);
                 break;
             case SDLK_x:
                 camera.moveDown(1);

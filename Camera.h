@@ -20,16 +20,17 @@ public:
     void turn(float speed);
     void moveForward(float speed);
     void moveBackward(float speed);
+    void moveLeft(float speed);
+    void moveRight(float speed);
     void moveUp(float speed);
     void moveDown(float speed);
     Matrix makerotationZMatrix(float rot);
     Matrix makerotationYMatrix(float rot);
     Matrix makeFPSTransform(Point position, float pitch, float yaw);
 
-    void transform(Point in, Point* out);
+    void transform(Point in, Point *out);
     Point getPosition();
     TriMesh worldTransform(TriMesh in);
     TriMesh ndcTransform(TriMesh in, int height, int width);
     TriMesh viewPortTransform(TriMesh in, int height, int width);
-
 };

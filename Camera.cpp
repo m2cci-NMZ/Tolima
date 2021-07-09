@@ -75,6 +75,23 @@ void Camera::moveBackward(float speed)
     position = position - (target * speed);
 }
 
+void Camera::moveLeft(float speed)
+{
+    Point left;
+    left = up.crossProduct(target);
+    left.normalize();
+    position = position +( left * speed);
+}
+
+void Camera::moveRight(float speed)
+{
+    Point right;
+    right = target.crossProduct(up);
+    right.normalize();
+    position = position + (right * speed);
+}
+
+
 void Camera::moveUp(float speed)
 {
     Point up;
