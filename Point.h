@@ -25,8 +25,8 @@ public:
     Point operator-(const Point &_point);
     Point operator*(float a);
     Point operator/(float a);
-    Point crossProduct(Point p);
-    float dotProduct(Point p);
+    Point crossProduct(const Point &p);
+    float dotProduct(const Point &p);
     float norm();
     void normalize();
 

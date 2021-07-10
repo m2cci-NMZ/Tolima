@@ -80,7 +80,7 @@ Point Point::operator/(float a)
     return p3;
 };
 
-Point Point::crossProduct(Point p1)
+Point Point::crossProduct(const Point &p1)
 {
     Point p3;
 
@@ -101,7 +101,7 @@ void Point::normalize()
     y /= norm;
     z /= norm;
 }
-float Point::dotProduct(Point p){
+float Point::dotProduct(const Point &p){
     float dot;
     dot = this->x*p.x + this->y*p.y + this->z*p.z;
     return dot;
