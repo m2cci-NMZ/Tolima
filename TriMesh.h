@@ -24,7 +24,7 @@ public:
 
     int getnTriangles();
 
-    void readfile(string input);
+    void createCube();
 
     void sortZ();
 

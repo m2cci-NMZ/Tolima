@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     Loader loader(f, &cube);
     if (!loader.loadMeshFromFile())
     {
-        cube.readfile("exemple.txt");
+        cube.createCube();
     }
 
     renderer.renderLoop(camera, cube, shader, clip);

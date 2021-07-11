@@ -48,59 +48,46 @@ TriMesh TriMesh::copy()
     return TriMeshCopy;
 }
 
-void TriMesh::readfile(string input)
+void TriMesh::createCube()
 {
-    string line;
-    ifstream myfile(input);
-    if (!myfile.is_open())
+
+    float mat[12][9] = {
+
+        //// SOUTH
+        {0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f},
+
+        //// EAST
+        {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f},
+
+        //// NORTH
+        {1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f},
+        {1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+
+        //// WEST
+        {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f},
+        {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+
+        //// TOP
+        {0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f},
+        {0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f},
+
+        //// BOTTOM
+        {1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f},
+        {1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f},
+
+    };
+    for (auto tri : mat)
     {
-        while (getline(myfile, line))
-        {
-            cout << line << '\n';
-        }
-        myfile.close();
+        Point p1 = Point(tri[0], tri[1], tri[2]);
+        Point p2 = Point(tri[3], tri[4], tri[5]);
+        Point p3 = Point(tri[6], tri[7], tri[8]);
 
-        float mat[12][9] = {
+        Triangle triangle = Triangle(p1, p2, p3);
 
-            //// SOUTH
-            {0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f},
-            {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f},
-
-            //// EAST
-            {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f},
-            {1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f},
-
-            //// NORTH
-            {1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f},
-            {1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
-
-            //// WEST
-            {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f},
-            {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-
-            //// TOP
-            {0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f},
-            {0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f},
-
-            //// BOTTOM
-            {1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f},
-            {1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f},
-
-        };
-        for (auto tri : mat)
-        {
-            Point p1 = Point(tri[0], tri[1], tri[2]);
-            Point p2 = Point(tri[3], tri[4], tri[5]);
-            Point p3 = Point(tri[6], tri[7], tri[8]);
-
-            Triangle triangle = Triangle(p1, p2, p3);
-
-            addTriangle(triangle);
-        }
+        addTriangle(triangle);
     }
-
-    else
-        cout << "Unable to open file";
 }
 
 void TriMesh::sortZ()
