@@ -18,9 +18,9 @@ public:
     Point getB();
     Point getC();
 
-    void setA(Point _a);
-    void setB(Point _b);
-    void setC(Point _c);
+    void setA(const Point& _a);
+    void setB(const Point& _b);
+    void setC(const Point& _c);
 
     void setLum(float _lum);
     float getLum();

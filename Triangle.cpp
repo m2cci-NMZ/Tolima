@@ -34,15 +34,15 @@ Point Triangle::getC()
     return c;
 }
 
-void Triangle::setA(Point _a)
+void Triangle::setA(const Point& _a)
 {
     a = _a;
 }
-void Triangle::setB(Point _b)
+void Triangle::setB(const Point& _b)
 {
     b = _b;
 }
-void Triangle::setC(Point _c)
+void Triangle::setC(const Point& _c)
 {
     c = _c;
 }
