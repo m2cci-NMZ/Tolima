@@ -142,7 +142,7 @@ Point Camera::getPosition()
 {
     return position;
 }
-TriMesh Camera::worldTransform(TriMesh in)
+TriMesh Camera::worldTransform(TriMesh& in)
 {
     TriMesh out;
     for (auto tri : in.getTriangles())
@@ -160,7 +160,7 @@ TriMesh Camera::worldTransform(TriMesh in)
     }
     return out;
 }
-TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
+TriMesh Camera::ndcTransform(TriMesh& in, int height, int width)
 {
     TriMesh out;
     Matrix matProj;
@@ -199,7 +199,7 @@ TriMesh Camera::ndcTransform(TriMesh in, int height, int width)
     return out;
 }
 
-TriMesh Camera::viewPortTransform(TriMesh in, int height, int width)
+TriMesh Camera::viewPortTransform(TriMesh& in, int height, int width)
 {
     TriMesh out;
     in.sortZ();

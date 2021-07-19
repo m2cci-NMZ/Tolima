@@ -30,7 +30,7 @@ public:
 
     void transform(Point in, Point *out);
     Point getPosition();
-    TriMesh worldTransform(TriMesh in);
-    TriMesh ndcTransform(TriMesh in, int height, int width);
-    TriMesh viewPortTransform(TriMesh in, int height, int width);
+    TriMesh worldTransform(TriMesh& in);
+    TriMesh ndcTransform(TriMesh& in, int height, int width);
+    TriMesh viewPortTransform(TriMesh& in, int height, int width);
 };
