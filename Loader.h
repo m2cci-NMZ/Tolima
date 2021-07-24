@@ -16,4 +16,6 @@ public:
 
     Loader(string _filename, TriMesh *_object);
     bool loadMeshFromFile();
+    int* separateFaceElements(string s); 
+    int analyzeLine(strstream s);
 };
