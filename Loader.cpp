@@ -19,10 +19,12 @@ bool Loader::loadMeshFromFile()
     if (!f.is_open())
         return false;
 
-    // Store all vertices
+    // vector containing all vertices
     vector<Point> verts;
-    // Store all normals
+    // vector containing normals
     vector<Point> normals;
+    // vector containing texture coords
+    vector<Point> vtextures;
 
     while (!f.eof())
     {
@@ -34,7 +36,25 @@ bool Loader::loadMeshFromFile()
 
         char junk;
 
-        if (line[0] == 'v' || line[1] != 'n')
+        switch (this->analyzeLine(line))
+        {
+        case 0:
+            break;
+        case 1:
+            this->separateFaceElements(line);
+            break;
+        case 2:
+            this->extractPoint(verts, line);
+            break;
+        case 3:
+            this->extractPoint(normals, line);
+            break;
+        case 4:
+            this->extractPoint(vtextures, line);
+            break;
+        }
+
+        /*        if (line[0] == 'v' || line[1] != 'n')
         {
             Point p;
             float x, y, z;
@@ -79,6 +99,7 @@ bool Loader::loadMeshFromFile()
                 object->addTriangle(t);
             }
         }
+        */
     }
 
     f.close();
@@ -97,7 +118,8 @@ int *Loader::separateFaceElements(string s)
 }
 int Loader::analyzeLine(string s)
 {
-    if (s.substr(0,2) == "f "){
+    if (s.substr(0, 2) == "f ")
+    {
         return 1;
     }
     if (s.substr(0, 2) == "v ")
@@ -112,7 +134,22 @@ int Loader::analyzeLine(string s)
     {
         return 4;
     }
-    else{
+    else
+    {
         return 0;
     }
+}
+void Loader::extractPoint(vector<Point> &verts, string line)
+{
+    strstream s;
+    char junk;
+    Point p;
+    float x, y, z;
+
+    s << line;
+    s >> junk >> x >> y >> z;
+    p.setX(x);
+    p.setY(y);
+    p.setZ(z);
+    verts.push_back(p);
 }
