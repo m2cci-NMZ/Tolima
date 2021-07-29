@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <fstream>
 #include <strstream>
+#include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -19,12 +21,16 @@ bool Loader::loadMeshFromFile()
     if (!f.is_open())
         return false;
 
-    // vector containing all vertices
+    // vector containing vertex coordinates
     vector<Point> verts;
-    // vector containing normals
+    // vector containing normal coordinates
     vector<Point> normals;
-    // vector containing texture coords
+    // vector containing texture coordinates
     vector<Point> vtextures;
+
+    // vector containing indices
+    vector<int[3]> vind;
+
 
     while (!f.eof())
     {
@@ -33,15 +39,14 @@ bool Loader::loadMeshFromFile()
 
         strstream s;
         s << line;
-
-        char junk;
+        vector<int[3]> faceElements;
 
         switch (this->analyzeLine(line))
         {
         case 0:
             break;
         case 1:
-            this->separateFaceElements(line);
+            vind = this->separateFaceElements(line);
             break;
         case 2:
             this->extractPoint(verts, line);
@@ -53,53 +58,6 @@ bool Loader::loadMeshFromFile()
             this->extractPoint(vtextures, line);
             break;
         }
-
-        /*        if (line[0] == 'v' || line[1] != 'n')
-        {
-            Point p;
-            float x, y, z;
-            s >> junk >> x >> y >> z;
-            p.setX(x);
-            p.setY(y);
-            p.setZ(z);
-            verts.push_back(p);
-        }
-        if (line[0] == 'v' || line[1] == 'n')
-        {
-            Point p;
-            float x, y, z;
-            s >> junk >> x >> y >> z;
-            p.setX(x);
-            p.setY(y);
-            p.setZ(z);
-            normals.push_back(p);
-        }
-        //reconstruct all triangles from vertices
-        if (line[0] == 'f')
-        {
-            string f[3];
-            int v[3];
-            int vn[3];
-            s >> junk >> f[0] >> f[1] >> f[2];
-            string sep = "//";
-            if (f[0].find(sep) != string::npos)
-            {
-                for (int i = 0; i < 3; i++)
-                {
-                    int *els = this->separateFaceElements(f[i]);
-                    v[i] = els[0];
-                    vn[i] = els[1];
-                }
-                Triangle t(verts[v[0] - 1], verts[v[1] - 1], verts[v[2] - 1]);
-                object->addTriangle(t);
-            }
-            else
-            {
-                Triangle t(verts[stoi(f[0]) - 1], verts[stoi(f[1]) - 1], verts[stoi(f[2]) - 1]);
-                object->addTriangle(t);
-            }
-        }
-        */
     }
 
     f.close();
@@ -107,13 +65,29 @@ bool Loader::loadMeshFromFile()
     return true;
 }
 
-int *Loader::separateFaceElements(string s)
+vector<int[3]> Loader::separateFaceElements(string s)
 {
-    int elements[2];
-    int sep = s.find("//");
-    int end = s.size();
-    elements[0] = stoi(s.substr(0, sep));
-    elements[1] = stoi(s.substr(sep, end));
+    vector<int[3]> elements;
+    istringstream ss(s);
+    char del = '/';
+    string token;
+    string f;
+    while (ss >> f)
+    {
+        int indexes[3];
+        if (f[0] != 'f')
+        {
+            istringstream stmp(f);
+            int i = 0;
+            while (getline(stmp, token, del))
+            {
+                indexes[i] = stoi(token);
+                i++;
+            }
+            elements.push_back(indexes);
+        }
+    }
+
     return elements;
 }
 int Loader::analyzeLine(string s)
@@ -142,7 +116,7 @@ int Loader::analyzeLine(string s)
 void Loader::extractPoint(vector<Point> &verts, string line)
 {
     strstream s;
-    char junk;
+    string junk;
     Point p;
     float x, y, z;
 
