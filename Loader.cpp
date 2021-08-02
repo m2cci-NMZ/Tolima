@@ -143,5 +143,9 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
             object->addTriangle(t);
         };
         break;
+    case 1:
+        break;
+    case 2:
+        break;
     }
 }

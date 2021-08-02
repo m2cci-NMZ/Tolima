@@ -7,7 +7,9 @@ private:
     Point a;
     Point b;
     Point c;
-    Point normal;
+    Point nA;
+    Point nB;
+    Point nC;
     float light;
 
 public:
