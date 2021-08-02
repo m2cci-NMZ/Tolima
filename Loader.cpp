@@ -29,8 +29,7 @@ bool Loader::loadMeshFromFile()
     vector<Point> vtextures;
 
     // vector containing indices
-    vector<int[3]> vind;
-
+    vector<vector<int>> vind;
 
     while (!f.eof())
     {
@@ -39,7 +38,6 @@ bool Loader::loadMeshFromFile()
 
         strstream s;
         s << line;
-        vector<int[3]> faceElements;
 
         switch (this->analyzeLine(line))
         {
@@ -47,6 +45,7 @@ bool Loader::loadMeshFromFile()
             break;
         case 1:
             vind = this->separateFaceElements(line);
+            this->addTriangles(verts, normals, vtextures, vind);
             break;
         case 2:
             this->extractPoint(verts, line);
@@ -65,26 +64,24 @@ bool Loader::loadMeshFromFile()
     return true;
 }
 
-vector<int[3]> Loader::separateFaceElements(string s)
+vector<vector<int>> Loader::separateFaceElements(string s)
 {
-    vector<int[3]> elements;
+    vector<vector<int>> elements;
     istringstream ss(s);
     char del = '/';
     string token;
     string f;
     while (ss >> f)
     {
-        int indexes[3];
+        vector<int> indices;
         if (f[0] != 'f')
         {
             istringstream stmp(f);
-            int i = 0;
             while (getline(stmp, token, del))
             {
-                indexes[i] = stoi(token);
-                i++;
+                indices.push_back(stoi(token));
             }
-            elements.push_back(indexes);
+            elements.push_back(indices);
         }
     }
 
@@ -126,4 +123,25 @@ void Loader::extractPoint(vector<Point> &verts, string line)
     p.setY(y);
     p.setZ(z);
     verts.push_back(p);
+}
+void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices)
+{
+    int nbVerts = indices.size();
+    switch (nbVerts % 3)
+    {
+    case 0:
+        for (int i = 0; i < nbVerts / 3; i++)
+        {
+            int idx1, idx2, idx3;
+            idx1 = indices.at(i * 3).at(0) - 1;
+            idx2 = indices.at(i * 3 + 1).at(0) - 1;
+            idx3 = indices.at(i * 3 + 2).at(0) - 1;
+            Triangle t;
+            t.setA(verts.at(idx1));
+            t.setB(verts.at(idx2));
+            t.setC(verts.at(idx3));
+            object->addTriangle(t);
+        };
+        break;
+    }
 }

@@ -15,8 +15,8 @@ private:
 public:
     Loader(string _filename, TriMesh *_object);
     bool loadMeshFromFile();
-    vector<int[3]> separateFaceElements(string s);
+    vector<vector<int>> separateFaceElements(string s);
     int analyzeLine(string line);
     void extractPoint(vector<Point> &verts, string line);
-    void addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<int[3]> &indices);
+    void addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices);
 };
