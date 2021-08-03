@@ -126,18 +126,32 @@ void Loader::extractPoint(vector<Point> &verts, string line)
 }
 void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices)
 {
+    Triangle t;
+    int idx1, idx2, idx3;
     int nbVerts = indices.size();
     // Only works for convex polygons
     for (int i = 2; i < nbVerts; i++)
     {
-        int idx1, idx2, idx3;
         idx1 = indices.at(0).at(0) - 1;
         idx2 = indices.at(i - 1).at(0) - 1;
         idx3 = indices.at(i).at(0) - 1;
-        Triangle t;
         t.setA(verts.at(idx1));
         t.setB(verts.at(idx2));
         t.setC(verts.at(idx3));
+
+        if (indices.at(0).size() > 1)
+        {
+            idx1 = indices.at(0).at(1) - 1;
+            idx2 = indices.at(i - 1).at(1) - 1;
+            idx3 = indices.at(i).at(1) - 1;
+            t.setNA(verts.at(idx1));
+            t.setNB(verts.at(idx2));
+            t.setNC(verts.at(idx3));
+        }
+        else
+        {
+            t.computeNormal();
+        }
         object->addTriangle(t);
     };
 }
