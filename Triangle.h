@@ -20,16 +20,23 @@ public:
     Point getB();
     Point getC();
 
-    void setA(const Point& _a);
-    void setB(const Point& _b);
-    void setC(const Point& _c);
+    Point getNA();
+    Point getNB();
+    Point getNC();
+
+    void setNA(const Point &_na);
+    void setNB(const Point &_nb);
+    void setNC(const Point &_nc);
+
+    void setA(const Point &_a);
+    void setB(const Point &_b);
+    void setC(const Point &_c);
 
     void setLum(float _lum);
     float getLum();
 
     void computeNormal();
     Point getNormal();
-
 
     ~Triangle();
 };

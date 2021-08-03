@@ -34,6 +34,21 @@ Point Triangle::getC()
     return c;
 }
 
+Point Triangle::getNA()
+{
+    return nA;
+}
+
+Point Triangle::getNB()
+{
+    return nB;
+}
+
+Point Triangle::getNC()
+{
+    return nC;
+}
+
 void Triangle::setA(const Point& _a)
 {
     a = _a;
@@ -45,6 +60,19 @@ void Triangle::setB(const Point& _b)
 void Triangle::setC(const Point& _c)
 {
     c = _c;
+}
+
+void Triangle::setNA(const Point& _nA)
+{
+    nA = _nA;
+}
+void Triangle::setNB(const Point& _nB)
+{
+    nB = _nB;
+}
+void Triangle::setNC(const Point& _nC)
+{
+    nC = _nC;
 }
 
 void Triangle::setLum(float _lum)
