@@ -63,12 +63,14 @@ void Triangle::computeNormal()
     line1 = b - a;
     line2 = c - a;
 
-    normal = line1.crossProduct(line2);
-    normal.normalize();
+    nA = line1.crossProduct(line2);
+    nA.normalize();
+    nB = nA;
+    nC = nA;
 }
 
 Point Triangle::getNormal() {
-    return normal;
+    return nA;
 }
 
 Triangle::~Triangle()
