@@ -33,8 +33,8 @@ bool Loader::loadMeshFromFile()
 
     while (!f.eof())
     {
-        char line[128];
-        f.getline(line, 128);
+        char line[500];
+        f.getline(line, 500);
 
         strstream s;
         s << line;
@@ -79,7 +79,10 @@ vector<vector<int>> Loader::separateFaceElements(string s)
             istringstream stmp(f);
             while (getline(stmp, token, del))
             {
-                indices.push_back(stoi(token));
+                if (token != "")
+                {
+                    indices.push_back(stoi(token));
+                }
             }
             elements.push_back(indices);
         }
