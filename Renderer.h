@@ -3,9 +3,11 @@
 #include "TriMesh.h"
 #include "Clipper.h"
 #include "Shader.h"
+#include <algorithm>
 
-class Renderer{
-    private:
+class Renderer
+{
+private:
     int windowHeight;
     int windowWidth;
     SDL_Window *pWindow{nullptr};
@@ -13,7 +15,7 @@ class Renderer{
     SDL_Event events;
     bool isOpen{true};
 
-    public:
+public:
     Renderer(int hieght, int width);
     int getWidth();
     int getHeight();
@@ -26,4 +28,5 @@ class Renderer{
     void eventManager(Camera &camera);
     void renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip);
     int closeWindow();
+    void boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax);
 };

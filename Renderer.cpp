@@ -203,3 +203,13 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
         SDL_RenderPresent(this->pRenderer);
     }
 }
+void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax)
+{
+    float y[3] = {t.getA().getY(), t.getB().getY(), t.getC().getY()};
+    float x[3] = {t.getA().getX(), t.getB().getX(), t.getC().getX()};
+
+    xmin = *std::min_element(x, x + 3);
+    ymin = *std::min_element(y, y + 3);
+    xmax = *std::max_element(x, x + 3);
+    ymax = *std::min_element(y, y + 3);
+}
