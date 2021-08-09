@@ -228,9 +228,9 @@ void Renderer::renderTriangle(Triangle &t)
     {
         return (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) - (p3.getY() - p1.getY()) * (p2.getX() - p1.getX());
     };
-    for (int i = round(xmin); i < round(xmax); i++)
+    for (int i = round(xmin); i <= round(xmax); i++)
     {
-        for (int j = round(ymin); j < round(ymax); j++)
+        for (int j = round(ymin); j <= round(ymax); j++)
         {
             Point p;
             p.setX(i);
