@@ -65,14 +65,17 @@ void Triangle::setC(const Point& _c)
 void Triangle::setNA(const Point& _nA)
 {
     nA = _nA;
+    nA.normalize();
 }
 void Triangle::setNB(const Point& _nB)
 {
     nB = _nB;
+    nB.normalize();
 }
 void Triangle::setNC(const Point& _nC)
 {
     nC = _nC;
+    nC.normalize();
 }
 
 void Triangle::setLum(float _lum)

@@ -31,6 +31,7 @@ TriMesh Shader::computeShader(TriMesh object)
 }
 void Shader::computeVertIntensities(Triangle &t)
 {
+    lightDir.normalize();
     intensityA = t.getNA().dotProduct(lightDir);
     intensityB = t.getNB().dotProduct(lightDir);
     intensityC = t.getNC().dotProduct(lightDir);

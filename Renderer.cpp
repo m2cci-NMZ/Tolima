@@ -220,6 +220,10 @@ void Renderer::renderTriangle(Triangle &t)
     s.computeVertIntensities(t);
     float xmin, xmax, ymin, ymax;
     this->boundingBox(t, xmin, xmax, ymin, ymax);
+    float iA, iB, iC;
+    iA = s.getIntensityA();
+    iB = s.getIntensityB();
+    iC = s.getIntensityC();
     auto edge = [](Point p1, Point p2, Point p3)
     {
         return (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) - (p3.getY() - p1.getY()) * (p2.getX() - p1.getX());
@@ -232,10 +236,6 @@ void Renderer::renderTriangle(Triangle &t)
             p.setX(i);
             p.setY(j);
             float w1, w2, w3, area;
-            float iA, iB, iC;
-            iA = s.getIntensityA();
-            iB = s.getIntensityB();
-            iC = s.getIntensityC();
             w1 = edge(t.getB(), t.getC(), p);
             w2 = edge(t.getC(), t.getA(), p);
             w3 = edge(t.getA(), t.getB(), p);
@@ -245,6 +245,11 @@ void Renderer::renderTriangle(Triangle &t)
                 w1 /= area;
                 w2 /= area;
                 w3 /= area;
+                /*
+                iA = 1.0;
+                iB= 1.0;
+                iC= 0.5;
+                */
                 float color = w1 * iA + w2 * iB + w3 * iC;
                 SDL_SetRenderDrawColor(this->pRenderer, int(255 * color), int(255 * color), int(255 * color), 255);
                 SDL_RenderDrawPoint(this->pRenderer, i, j);
