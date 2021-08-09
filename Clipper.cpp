@@ -33,7 +33,13 @@ int Clipper::clipAgainstPlane(Triangle in)
     float d2 = this->distanceToPlane(in.getB());
     float d3 = this->distanceToPlane(in.getC());
     t1.setLum(in.getLum());
+    t1.setNA(in.getNA());
+    t1.setNB(in.getNB());
+    t1.setNC(in.getNC());
     t2.setLum(in.getLum());
+    t2.setNA(in.getNA());
+    t2.setNB(in.getNB());
+    t2.setNC(in.getNC());
     //everything is in the plane, return 1 and put original triangle in t1
     if (d1 > 0 && d2 > 0 && d3 > 0)
     {
@@ -94,25 +100,28 @@ int Clipper::clipAgainstPlane(Triangle in)
     else
     {
         Point p1, p2;
-        if (d1>0){
-            p1=this->intersectPlane(in.getA(), in.getB());
-            p2=this->intersectPlane(in.getA(), in.getC());
+        if (d1 > 0)
+        {
+            p1 = this->intersectPlane(in.getA(), in.getB());
+            p2 = this->intersectPlane(in.getA(), in.getC());
 
             t1.setA(in.getA());
             t1.setB(p1);
             t1.setC(p2);
         }
-        else if (d2>0){
-            p1=this->intersectPlane(in.getA(), in.getB());
-            p2=this->intersectPlane(in.getB(), in.getC());
+        else if (d2 > 0)
+        {
+            p1 = this->intersectPlane(in.getA(), in.getB());
+            p2 = this->intersectPlane(in.getB(), in.getC());
 
             t1.setA(p1);
             t1.setB(in.getB());
             t1.setC(p2);
         }
-        else{
-            p1=this->intersectPlane(in.getB(), in.getC());
-            p2=this->intersectPlane(in.getA(), in.getC());
+        else
+        {
+            p1 = this->intersectPlane(in.getB(), in.getC());
+            p2 = this->intersectPlane(in.getA(), in.getC());
 
             t1.setA(p2);
             t1.setB(p1);
