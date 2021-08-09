@@ -15,4 +15,7 @@ class Shader{
         void setLightDir(Point p);
         TriMesh computeShader(TriMesh object);
         void computeVertIntensities(Triangle& t);
+        float getIntensityA();
+        float getIntensityB();
+        float getIntensityC();
 };

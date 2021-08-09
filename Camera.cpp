@@ -80,7 +80,7 @@ void Camera::moveLeft(float speed)
     Point left;
     left = up.crossProduct(target);
     left.normalize();
-    position = position +( left * speed);
+    position = position + (left * speed);
 }
 
 void Camera::moveRight(float speed)
@@ -90,7 +90,6 @@ void Camera::moveRight(float speed)
     right.normalize();
     position = position + (right * speed);
 }
-
 
 void Camera::moveUp(float speed)
 {
@@ -142,7 +141,7 @@ Point Camera::getPosition()
 {
     return position;
 }
-TriMesh Camera::worldTransform(TriMesh& in)
+TriMesh Camera::worldTransform(TriMesh &in)
 {
     TriMesh out;
     for (auto tri : in.getTriangles())
@@ -150,6 +149,9 @@ TriMesh Camera::worldTransform(TriMesh& in)
         Point p1, p2, p3;
         Triangle t;
         t.setLum(tri.getLum());
+        t.setNA(tri.getNA());
+        t.setNB(tri.getNB());
+        t.setNC(tri.getNC());
         this->transform(tri.getA(), &p1);
         t.setA(p1);
         this->transform(tri.getB(), &p2);
@@ -160,7 +162,7 @@ TriMesh Camera::worldTransform(TriMesh& in)
     }
     return out;
 }
-TriMesh Camera::ndcTransform(TriMesh& in, int height, int width)
+TriMesh Camera::ndcTransform(TriMesh &in, int height, int width)
 {
     TriMesh out;
     Matrix matProj;
@@ -183,6 +185,9 @@ TriMesh Camera::ndcTransform(TriMesh& in, int height, int width)
         Point p;
         Triangle t;
         t.setLum(tri.getLum());
+        t.setNA(tri.getNA());
+        t.setNB(tri.getNB());
+        t.setNC(tri.getNC());
 
         // Project to view
         matProj.multiplyVector(tri.getA(), &p);
@@ -199,7 +204,7 @@ TriMesh Camera::ndcTransform(TriMesh& in, int height, int width)
     return out;
 }
 
-TriMesh Camera::viewPortTransform(TriMesh& in, int height, int width)
+TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
 {
     TriMesh out;
     in.sortZ();
@@ -215,6 +220,9 @@ TriMesh Camera::viewPortTransform(TriMesh& in, int height, int width)
             Triangle t;
             Point p;
             t.setLum(tri.getLum());
+            t.setNA(tri.getNA());
+            t.setNB(tri.getNB());
+            t.setNC(tri.getNC());
             //scale to window size
 
             p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));

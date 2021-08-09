@@ -98,7 +98,9 @@ void Triangle::computeNormal()
 }
 
 Point Triangle::getNormal() {
-    return nA;
+    Point nMean = (nA+nB+nC)/3;
+    nMean.normalize();
+    return nMean;
 }
 
 Triangle::~Triangle()

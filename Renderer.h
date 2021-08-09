@@ -4,6 +4,7 @@
 #include "Clipper.h"
 #include "Shader.h"
 #include <algorithm>
+#include <cmath>
 
 class Renderer
 {
@@ -29,4 +30,5 @@ public:
     void renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip);
     int closeWindow();
     void boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax);
+    void renderTriangle(Triangle &t);
 };

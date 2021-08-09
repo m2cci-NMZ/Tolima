@@ -139,8 +139,9 @@ void Renderer::drawObject(TriMesh object)
 
     for (auto tri : object.getTriangles())
     {
-        SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
-        this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
+        //SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
+        //this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
+        this->renderTriangle(tri);
     }
 }
 int Renderer::closeWindow()
@@ -211,5 +212,43 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmin = *std::min_element(x, x + 3);
     ymin = *std::min_element(y, y + 3);
     xmax = *std::max_element(x, x + 3);
-    ymax = *std::min_element(y, y + 3);
+    ymax = *std::max_element(y, y + 3);
+}
+void Renderer::renderTriangle(Triangle &t)
+{
+    Shader s;
+    s.computeVertIntensities(t);
+    float xmin, xmax, ymin, ymax;
+    this->boundingBox(t, xmin, xmax, ymin, ymax);
+    auto edge = [](Point p1, Point p2, Point p3)
+    {
+        return (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) - (p3.getY() - p1.getY()) * (p2.getX() - p1.getX());
+    };
+    for (int i = round(xmin); i < round(xmax); i++)
+    {
+        for (int j = round(ymin); j < round(ymax); j++)
+        {
+            Point p;
+            p.setX(i);
+            p.setY(j);
+            float w1, w2, w3, area;
+            float iA, iB, iC;
+            iA = s.getIntensityA();
+            iB = s.getIntensityB();
+            iC = s.getIntensityC();
+            w1 = edge(t.getB(), t.getC(), p);
+            w2 = edge(t.getC(), t.getA(), p);
+            w3 = edge(t.getA(), t.getB(), p);
+            area = edge(t.getA(), t.getB(), t.getC());
+            if (w1 >= 0 && w2 >= 0 && w3 >= 0)
+            {
+                w1 /= area;
+                w2 /= area;
+                w3 /= area;
+                float color = w1 * iA + w2 * iB + w3 * iC;
+                SDL_SetRenderDrawColor(this->pRenderer, int(255 * color), int(255 * color), int(255 * color), 255);
+                SDL_RenderDrawPoint(this->pRenderer, i, j);
+            }
+        }
+    }
 }

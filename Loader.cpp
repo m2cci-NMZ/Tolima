@@ -147,9 +147,9 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
             idx1 = indices.at(0).at(1) - 1;
             idx2 = indices.at(i - 1).at(1) - 1;
             idx3 = indices.at(i).at(1) - 1;
-            t.setNA(verts.at(idx1));
-            t.setNB(verts.at(idx2));
-            t.setNC(verts.at(idx3));
+            t.setNA(normals.at(idx1));
+            t.setNB(normals.at(idx2));
+            t.setNC(normals.at(idx3));
         }
         else
         {
