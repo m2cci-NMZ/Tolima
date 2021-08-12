@@ -189,9 +189,9 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
             startTime = SDL_GetTicks();
         }
 
-        TriMesh proj;
+        //TriMesh proj;
 
-        proj = camera.worldTransform(object);
+        TriMesh&& proj = camera.worldTransform(object);
         clip.setPlane(pNear, pNearNormal);
         proj = clip.clipObject(proj);
         proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);

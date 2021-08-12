@@ -27,7 +27,7 @@ Point Clipper::intersectPlane(Point p1, Point p2)
     return p1 - line * prod3;
 }
 
-int Clipper::clipAgainstPlane(Triangle in)
+int Clipper::clipAgainstPlane(Triangle& in)
 {
     float d1 = this->distanceToPlane(in.getA());
     float d2 = this->distanceToPlane(in.getB());
@@ -132,7 +132,7 @@ int Clipper::clipAgainstPlane(Triangle in)
     return 0;
 }
 
-TriMesh Clipper::clipObject(TriMesh object)
+TriMesh Clipper::clipObject(TriMesh& object)
 {
     TriMesh out;
     for (auto tri : object.getTriangles())
