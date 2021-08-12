@@ -146,19 +146,27 @@ TriMesh Camera::worldTransform(TriMesh &in)
     TriMesh out;
     for (auto tri : in.getTriangles())
     {
-        Point p1, p2, p3;
-        Triangle t;
-        t.setLum(tri.getLum());
-        t.setNA(tri.getNA());
-        t.setNB(tri.getNB());
-        t.setNC(tri.getNC());
-        this->transform(tri.getA(), &p1);
-        t.setA(p1);
-        this->transform(tri.getB(), &p2);
-        t.setB(p2);
-        this->transform(tri.getC(), &p3);
-        t.setC(p3);
-        out.addTriangle(t);
+        Point vCam = tri.getA() - position;
+        vCam.normalize();
+        //tri.computeNormal();
+
+        if (vCam.dotProduct(tri.getNormal()) < 0)
+        {
+
+            Point p1, p2, p3;
+            Triangle t;
+            t.setLum(tri.getLum());
+            t.setNA(tri.getNA());
+            t.setNB(tri.getNB());
+            t.setNC(tri.getNC());
+            this->transform(tri.getA(), &p1);
+            t.setA(p1);
+            this->transform(tri.getB(), &p2);
+            t.setB(p2);
+            this->transform(tri.getC(), &p3);
+            t.setC(p3);
+            out.addTriangle(t);
+        }
     }
     return out;
 }
@@ -210,35 +218,28 @@ TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
     in.sortZ();
     for (auto tri : in.getTriangles())
     {
-        Point vCam = tri.getA() - position;
-        vCam.normalize();
-        //tri.computeNormal();
 
-        if (vCam.dotProduct(tri.getNormal()) < 0)
-        //if (true)
-        {
-            Triangle t;
-            Point p;
-            t.setLum(tri.getLum());
-            t.setNA(tri.getNA());
-            t.setNB(tri.getNB());
-            t.setNC(tri.getNC());
-            //scale to window size
+        Triangle t;
+        Point p;
+        t.setLum(tri.getLum());
+        t.setNA(tri.getNA());
+        t.setNB(tri.getNB());
+        t.setNC(tri.getNC());
+        //scale to window size
 
-            p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));
-            p.setY(tri.getA().getY() * float(height) / (2.0 * tri.getA().getW()) + (float(height) / 2.0));
-            t.setA(p);
+        p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));
+        p.setY(tri.getA().getY() * float(height) / (2.0 * tri.getA().getW()) + (float(height) / 2.0));
+        t.setA(p);
 
-            p.setX(tri.getB().getX() * float(width) / (2.0 * tri.getB().getW()) + (float(width) / 2.0));
-            p.setY(tri.getB().getY() * float(height) / (2.0 * tri.getB().getW()) + (float(height) / 2.0));
-            t.setB(p);
+        p.setX(tri.getB().getX() * float(width) / (2.0 * tri.getB().getW()) + (float(width) / 2.0));
+        p.setY(tri.getB().getY() * float(height) / (2.0 * tri.getB().getW()) + (float(height) / 2.0));
+        t.setB(p);
 
-            p.setX(tri.getC().getX() * float(width) / (2.0 * tri.getC().getW()) + (float(width) / 2.0));
-            p.setY(tri.getC().getY() * float(height) / (2.0 * tri.getC().getW()) + (float(height) / 2.0));
-            t.setC(p);
+        p.setX(tri.getC().getX() * float(width) / (2.0 * tri.getC().getW()) + (float(width) / 2.0));
+        p.setY(tri.getC().getY() * float(height) / (2.0 * tri.getC().getW()) + (float(height) / 2.0));
+        t.setC(p);
 
-            out.addTriangle(t);
-        }
+        out.addTriangle(t);
     }
     return out;
 }
