@@ -209,11 +209,11 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         clip.setPlane(pDown, pDownNormal);
         proj = clip.clipObject(proj);
-        SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
+        SDL_SetRenderDrawColor(pRenderer, 125, 125, 125, 0);
         SDL_RenderClear(this->pRenderer);
         this->drawObject(proj);
         SDL_RenderPresent(this->pRenderer);
-        
+
         uint32_t currTime = SDL_GetTicks();
         elapsedTime = (currTime - startTime) / 1000.0;
         counter++;

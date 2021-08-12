@@ -212,7 +212,7 @@ TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
     {
         Point vCam = tri.getA() - position;
         vCam.normalize();
-        tri.computeNormal();
+        //tri.computeNormal();
 
         if (vCam.dotProduct(tri.getNormal()) < 0)
         //if (true)
