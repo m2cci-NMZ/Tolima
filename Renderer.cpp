@@ -172,11 +172,23 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
     Point pDown, pDownNormal;
     pDown.setY(this->windowHeight);
     pDownNormal.setY(-1.0);
+
+    uint32_t startTime = SDL_GetTicks();
+    double elapsedTime = 0;
+    uint32_t counter = 0;
+
     while (this->isOpen)
     {
         {
             this->eventManager(camera);
         }
+
+        if (counter > 1000)
+        {
+            counter = 0;
+            startTime = SDL_GetTicks();
+        }
+
         TriMesh proj;
 
         proj = camera.worldTransform(object);
@@ -201,6 +213,16 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
         SDL_RenderClear(this->pRenderer);
         this->drawObject(proj);
         SDL_RenderPresent(this->pRenderer);
+        
+        uint32_t currTime = SDL_GetTicks();
+        elapsedTime = (currTime - startTime) / 1000.0;
+        counter++;
+        string title;
+
+        title = to_string(double(counter) / elapsedTime);
+        title.append(" FPS");
+        const char *titleConverted = title.c_str();
+        SDL_SetWindowTitle(pWindow, titleConverted);
     }
 }
 void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax)
