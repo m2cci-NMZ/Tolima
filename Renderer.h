@@ -16,7 +16,6 @@ private:
     SDL_Renderer *pRenderer{nullptr};
     SDL_Event events;
     bool isOpen{true};
-    std::vector<float> zbuffer;
 
 public:
     Renderer(int hieght, int width);

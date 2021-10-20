@@ -49,30 +49,30 @@ Point Triangle::getNC()
     return nC;
 }
 
-void Triangle::setA(const Point& _a)
+void Triangle::setA(const Point &_a)
 {
     a = _a;
 }
-void Triangle::setB(const Point& _b)
+void Triangle::setB(const Point &_b)
 {
     b = _b;
 }
-void Triangle::setC(const Point& _c)
+void Triangle::setC(const Point &_c)
 {
     c = _c;
 }
 
-void Triangle::setNA(const Point& _nA)
+void Triangle::setNA(const Point &_nA)
 {
     nA = _nA;
     nA.normalize();
 }
-void Triangle::setNB(const Point& _nB)
+void Triangle::setNB(const Point &_nB)
 {
     nB = _nB;
     nB.normalize();
 }
-void Triangle::setNC(const Point& _nC)
+void Triangle::setNC(const Point &_nC)
 {
     nC = _nC;
     nC.normalize();
@@ -100,12 +100,28 @@ void Triangle::computeNormal()
     nC = nA;
 }
 
-Point Triangle::getNormal() {
-    Point nMean = (nA+nB+nC)/3;
+Point Triangle::getNormal()
+{
+    Point nMean = (nA + nB + nC) / 3;
     nMean.normalize();
     return nMean;
 }
 
+void Triangle::derivePlane(float &a, float &b, float &c, float &d)
+{
+    Point d0 = this->b - this->a;
+    Point d1 = this->c - this->a;
+
+    a = d1.getY() * d0.getZ() - d1.getZ() * d0.getX();
+    b = d1.getZ() * d0.getX() - d1.getX() * d0.getZ();
+    c = d1.getX() * d0.getY() - d1.getY() * d0.getX();
+
+    float norm = 1. / sqrt(a * a + b * b + c * c);
+    a = a / norm;
+    b = b / norm;
+    c = c / norm;
+    d = -(a * d0.getX() + b * d0.getY() + c * d0.getZ());
+}
 Triangle::~Triangle()
 {
     /*if (a)

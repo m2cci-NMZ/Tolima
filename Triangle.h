@@ -37,6 +37,7 @@ public:
 
     void computeNormal();
     Point getNormal();
+    void derivePlane(float &a, float &b, float &c, float &c);
 
     ~Triangle();
 };
