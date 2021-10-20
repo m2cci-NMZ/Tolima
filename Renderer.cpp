@@ -245,8 +245,6 @@ void Renderer::renderTriangle(Triangle &t)
     iA = s.getIntensityA();
     iB = s.getIntensityB();
     iC = s.getIntensityC();
-    std::array zBuffer<std::array<float, this->windowWidth>, this->windowHeight>;
-    zBuffer.fill(1.0);
     auto edge = [](Point p1, Point p2, Point p3)
     {
         return (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) - (p3.getY() - p1.getY()) * (p2.getX() - p1.getX());
