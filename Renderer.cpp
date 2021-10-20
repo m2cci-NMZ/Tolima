@@ -191,6 +191,8 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         //TriMesh proj;
 
+        std::vector<std::vector> zbuffer(this->windowHeight, std::vector<float>(this->windowWidth, 1.0))
+
         TriMesh&& proj = camera.worldTransform(object);
         clip.setPlane(pNear, pNearNormal);
         proj = clip.clipObject(proj);
