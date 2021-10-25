@@ -58,15 +58,15 @@ int Clipper::clipAgainstPlane(Triangle& in)
         if (d1 < 0)
         {
             p1 = this->intersectPlane(in.getB(), in.getA());
-            p2 = this->intersectPlane(in.getB(), in.getA());
+            p2 = this->intersectPlane(in.getC(), in.getA());
 
             t1.setA(p1);
             t1.setB(in.getB());
             t1.setC(in.getC());
 
             t2.setA(p1);
-            t2.setB(p2);
-            t2.setC(in.getC());
+            t2.setB(in.getC());
+            t2.setC(p2);
         }
         else if (d2 < 0)
         {
