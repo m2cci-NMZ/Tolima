@@ -215,7 +215,6 @@ TriMesh Camera::ndcTransform(TriMesh &in, int height, int width)
 TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
 {
     TriMesh out;
-    in.sortZ();
     for (auto tri : in.getTriangles())
     {
 
@@ -229,14 +228,17 @@ TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
 
         p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));
         p.setY(tri.getA().getY() * float(height) / (2.0 * tri.getA().getW()) + (float(height) / 2.0));
+        p.setZ(tri.getA().getZ());
         t.setA(p);
 
         p.setX(tri.getB().getX() * float(width) / (2.0 * tri.getB().getW()) + (float(width) / 2.0));
         p.setY(tri.getB().getY() * float(height) / (2.0 * tri.getB().getW()) + (float(height) / 2.0));
+        p.setZ(tri.getB().getZ());
         t.setB(p);
 
         p.setX(tri.getC().getX() * float(width) / (2.0 * tri.getC().getW()) + (float(width) / 2.0));
         p.setY(tri.getC().getY() * float(height) / (2.0 * tri.getC().getW()) + (float(height) / 2.0));
+        p.setZ(tri.getC().getZ());
         t.setC(p);
 
         out.addTriangle(t);

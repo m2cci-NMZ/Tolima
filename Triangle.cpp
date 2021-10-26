@@ -107,20 +107,19 @@ Point Triangle::getNormal()
     return nMean;
 }
 
-void Triangle::derivePlane(float &a, float &b, float &c, float &d)
+void Triangle::derivePlane(float &A, float &B, float &C, float &D)
 {
     Point d0 = this->b - this->a;
     Point d1 = this->c - this->a;
+    Point normal;
 
-    a = d1.getY() * d0.getZ() - d1.getZ() * d0.getX();
-    b = d1.getZ() * d0.getX() - d1.getX() * d0.getZ();
-    c = d1.getX() * d0.getY() - d1.getY() * d0.getX();
-
-    float norm = 1. / sqrt(a * a + b * b + c * c);
-    a = a / norm;
-    b = b / norm;
-    c = c / norm;
-    d = -(a * d0.getX() + b * d0.getY() + c * d0.getZ());
+    normal =d0.crossProduct(d1);
+    normal.normalize();
+    A= normal.getX();
+    B= normal.getY();
+    C= normal.getZ();
+    
+    D = -(A * this->a.getX() + B * this->a.getY() + C * this->a.getZ());
 }
 Triangle::~Triangle()
 {

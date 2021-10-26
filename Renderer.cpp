@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <iostream>
 
 Renderer::Renderer(int height, int width)
 {
@@ -78,7 +79,7 @@ void Renderer::eventManager(Camera &camera)
 void Renderer::drawTriangle(Point p1, Point p2, Point p3)
 {
     //@todo this should ideally be somwhere else, and just return some sort of list with the coordinates of the pixels that should be colored.
-    //get length of all sides
+    // get length of all sides
     float d1, d2, d3, tx, ty, vx, vy;
     int counter;
 
@@ -86,7 +87,7 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
     d2 = sqrt(((p3.getY() - p2.getY()) * (p3.getY() - p2.getY())) + ((p3.getX() - p2.getX()) * (p3.getX() - p2.getX())));
     d3 = sqrt(((p1.getY() - p3.getY()) * (p1.getY() - p3.getY())) + ((p1.getX() - p3.getX()) * (p1.getX() - p3.getX())));
     if (((d1 < d2) or (d1 = d2)) and ((d1 < d2) or (d1 = d2)))
-    { //the first side is the shortest
+    { // the first side is the shortest
         tx = p1.getX();
         ty = p1.getY();
         vx = (p2.getX() - p1.getX()) / d1;
@@ -95,14 +96,14 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
         while (counter < d1)
         {
             SDL_RenderDrawLine(this->pRenderer, p3.getX(), p3.getY(), tx, ty);
-            //drawing a line from point(p3.getX(),p3.getY()) to point(tx,ty).
+            // drawing a line from point(p3.getX(),p3.getY()) to point(tx,ty).
             tx = tx + vx;
             ty = ty + vy;
             counter = counter + 1;
         }
     }
     else if ((d2 < d3) or (d2 = d3))
-    { //the second side is the shortest
+    { // the second side is the shortest
         tx = p2.getX();
         ty = p2.getY();
         vx = (p3.getX() - p2.getX()) / d2;
@@ -134,14 +135,14 @@ void Renderer::drawTriangle(Point p1, Point p2, Point p3)
         }
     }
 }
-void Renderer::drawObject(TriMesh object)
+void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer)
 {
 
     for (auto tri : object.getTriangles())
     {
-        //SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
-        //this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
-        this->renderTriangle(tri);
+        // SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
+        // this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
+        this->renderTriangle(tri, zbuffer);
     }
 }
 int Renderer::closeWindow()
@@ -154,7 +155,7 @@ int Renderer::closeWindow()
 
 void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip)
 {
-    //this should be done directly by the Clipper object
+    // this should be done directly by the Clipper object
     Point pNear, pNearNormal;
     pNear.setZ(0.1);
     pNearNormal.setZ(1.0);
@@ -189,11 +190,11 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
             startTime = SDL_GetTicks();
         }
 
-        //TriMesh proj;
+        // TriMesh proj;
 
-        std::vector<std::vector> zbuffer(this->windowHeight, std::vector<float>(this->windowWidth, 1.0))
+        std::vector<std::vector<float>> zbuffer(this->windowHeight + 1, std::vector<float>(this->windowWidth + 1, 100.0));
 
-        TriMesh&& proj = camera.worldTransform(object);
+        TriMesh &&proj = camera.worldTransform(object);
         clip.setPlane(pNear, pNearNormal);
         proj = clip.clipObject(proj);
         proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
@@ -211,9 +212,10 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         clip.setPlane(pDown, pDownNormal);
         proj = clip.clipObject(proj);
-        SDL_SetRenderDrawColor(pRenderer, 125, 125, 125, 0);
+        SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 0);
         SDL_RenderClear(this->pRenderer);
-        this->drawObject(proj);
+        this->drawObject(proj, zbuffer);
+
         SDL_RenderPresent(this->pRenderer);
 
         uint32_t currTime = SDL_GetTicks();
@@ -237,24 +239,33 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmax = *std::max_element(x, x + 3);
     ymax = *std::max_element(y, y + 3);
 }
-void Renderer::renderTriangle(Triangle &t)
+void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer)
 {
     Shader s;
     s.computeVertIntensities(t);
+
     float xmin, xmax, ymin, ymax;
     this->boundingBox(t, xmin, xmax, ymin, ymax);
+
     float iA, iB, iC;
     iA = s.getIntensityA();
     iB = s.getIntensityB();
     iC = s.getIntensityC();
+
+    float a, b, c, d;
+    float zx;
+    t.derivePlane(a, b, c, d);
+    float z = -(xmin * a + ymin * b + d) / c;
+
     auto edge = [](Point p1, Point p2, Point p3)
     {
         return (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) - (p3.getY() - p1.getY()) * (p2.getX() - p1.getX());
     };
-    for (int i = round(xmin); i <= round(xmax); i++)
+    for (int i = floor(xmin); i <= floor(xmax); i++)
     {
-        for (int j = round(ymin); j <= round(ymax); j++)
-        { 
+        zx = z;
+        for (int j = floor(ymin); j <= floor(ymax); j++)
+        {
             Point p;
             p.setX(i);
             p.setY(j);
@@ -263,20 +274,19 @@ void Renderer::renderTriangle(Triangle &t)
             w2 = edge(t.getC(), t.getA(), p);
             w3 = edge(t.getA(), t.getB(), p);
             area = edge(t.getA(), t.getB(), t.getC());
-            if (w1 >= 0 && w2 >= 0 && w3 >= 0)
+            if (w1 >= 0 && w2 >= 0 && w3 >= 0 && zx < zbuffer[j][i])
             {
                 w1 /= area;
                 w2 /= area;
                 w3 /= area;
-                /*
-                iA = 1.0;
-                iB= 1.0;
-                iC= 0.5;
-                */
+
                 float color = w1 * iA + w2 * iB + w3 * iC;
                 SDL_SetRenderDrawColor(this->pRenderer, int(255 * color), int(255 * color), int(255 * color), 255);
                 SDL_RenderDrawPoint(this->pRenderer, i, j);
+                zbuffer[j][i] = zx;
             }
+            zx = zx - a / c;
         }
+        z = z - b / c;
     }
 }
