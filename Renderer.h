@@ -23,7 +23,6 @@ public:
     int getHeight();
     void setWidth(int width);
     void setHeight(int height);
-    void drawTriangle(Point p1, Point p2, Point p3);
     void drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer);
     int init();
     void play();
