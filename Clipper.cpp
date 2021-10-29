@@ -132,7 +132,7 @@ int Clipper::clipAgainstPlane(Triangle& in)
     return 0;
 }
 
-TriMesh Clipper::clipObject(TriMesh& object)
+void Clipper::clipObject(TriMesh& object)
 {
     TriMesh out;
     for (auto tri : object.getTriangles())
@@ -150,5 +150,5 @@ TriMesh Clipper::clipObject(TriMesh& object)
             break;
         }
     }
-    return out;
+    object = out;
 }

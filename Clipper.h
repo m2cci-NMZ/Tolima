@@ -17,5 +17,5 @@ public:
     float distanceToPlane(Point p);
     Point intersectPlane(Point p1, Point p2);
     int clipAgainstPlane(Triangle& in);
-    TriMesh clipObject(TriMesh& in);
+    void clipObject(TriMesh& in);
 };
