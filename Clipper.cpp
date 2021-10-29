@@ -32,14 +32,8 @@ int Clipper::clipAgainstPlane(Triangle& in)
     float d1 = this->distanceToPlane(in.getA());
     float d2 = this->distanceToPlane(in.getB());
     float d3 = this->distanceToPlane(in.getC());
-    t1.setLum(in.getLum());
-    t1.setNA(in.getNA());
-    t1.setNB(in.getNB());
-    t1.setNC(in.getNC());
-    t2.setLum(in.getLum());
-    t2.setNA(in.getNA());
-    t2.setNB(in.getNB());
-    t2.setNC(in.getNC());
+    t1 = in;
+    t2 = in;
     //everything is in the plane, return 1 and put original triangle in t1
     if (d1 > 0 && d2 > 0 && d3 > 0)
     {
