@@ -143,16 +143,16 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
         proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
 
         clip.setPlane(pLeft, pLeftNormal);
-        proj = clip.clipObject(proj);
+        clip.clipObject(proj);
 
         clip.setPlane(pUp, pUpNormal);
-        proj = clip.clipObject(proj);
+        clip.clipObject(proj);
 
         clip.setPlane(pRight, pRightNormal);
-        proj = clip.clipObject(proj);
+        clip.clipObject(proj);
 
         clip.setPlane(pDown, pDownNormal);
-        proj = clip.clipObject(proj);
+        clip.clipObject(proj);
         SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 0);
         SDL_RenderClear(this->pRenderer);
         this->drawObject(proj, zbuffer);
