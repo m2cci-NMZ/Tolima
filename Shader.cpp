@@ -40,9 +40,9 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
     // Compute lighting by looping over RGB
     for (int i = 0; i < 3; i++)
     {
-        intensityA[i]=Ka[i] + max(Kd[i]*(La.dotProduct(t.getNA())),0)+ max(Ks[i]*pow(Ra.dotProduct(Va),_Ns),0);
-        intensityB[i]=Ka[i] + max(Kd[i]*(Lb.dotProduct(t.getNB())),0)+ max(Ks[i]*pow(Rb.dotProduct(Vb),_Ns),0);
-        intensityC[i]=Ka[i] + max(Kd[i]*(Lc.dotProduct(t.getNC())),0)+ max(Ks[i]*pow(Rc.dotProduct(Vc),_Ns),0);
+        intensityA[i] = Ka[i] + max(Kd[i] * (La.dotProduct(t.getNA())), 0.f) + max(Ks[i] * pow(Ra.dotProduct(Va), _Ns), 0.f);
+        intensityB[i] = Ka[i] + max(Kd[i] * (Lb.dotProduct(t.getNB())), 0.f) + max(Ks[i] * pow(Rb.dotProduct(Vb), _Ns), 0.f);
+        intensityC[i] = Ka[i] + max(Kd[i] * (Lc.dotProduct(t.getNC())), 0.f) + max(Ks[i] * pow(Rc.dotProduct(Vc), _Ns), 0.f);
     }
 }
 
