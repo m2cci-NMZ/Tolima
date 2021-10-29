@@ -18,6 +18,12 @@ Triangle::Triangle(Point _a, Point _b, Point _c)
     b = _b;
     c = _c;
 }
+Triangle::Triangle(const Triangle &t)
+{
+    a = t.a;
+    b = t.b;
+    c = t.c;
+}
 
 Point Triangle::getA()
 {
@@ -113,12 +119,12 @@ void Triangle::derivePlane(float &A, float &B, float &C, float &D)
     Point d1 = this->c - this->a;
     Point normal;
 
-    normal =d0.crossProduct(d1);
+    normal = d0.crossProduct(d1);
     normal.normalize();
-    A= normal.getX();
-    B= normal.getY();
-    C= normal.getZ();
-    
+    A = normal.getX();
+    B = normal.getY();
+    C = normal.getZ();
+
     D = -(A * this->a.getX() + B * this->a.getY() + C * this->a.getZ());
 }
 Triangle::~Triangle()
