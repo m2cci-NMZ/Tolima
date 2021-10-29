@@ -6,7 +6,7 @@
 
 class Shader{
     private:
-        Point lightDir;
+        static Point lightDir;
         float intensityA[3];
         float intensityB[3];
         float intensityC[3];
