@@ -1,9 +1,11 @@
 #include "Shader.h"
+#include <algorithm>
 
 Shader::Shader()
 {
     lightDir.setZ(10.0);
     lightDir.setY(1.0);
+    _Ns = 1.f;
 }
 void Shader::setLightDir(Point p)
 {
@@ -14,20 +16,21 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
 {
     // light direction vectors
     Point La, Lb, Lc;
-    La = this->lightDir - t.getA();
-    Lb = this->lightDir - t.getB();
-    Lc = this->lightDir - t.getC();
+    La = this->lightDir - t.getUntransA();
+    Lb = this->lightDir - t.getUntransB();
+    Lc = this->lightDir - t.getUntransC();
     La.normalize();
     Lb.normalize();
     Lc.normalize();
     // View direction vecors
     Point Va, Vb, Vc;
-    Va = camera_pos - t.getA();
-    Vb = camera_pos - t.getB();
-    Vc = camera_pos - t.getC();
+    Va = camera_pos - t.getUntransA();
+    Vb = camera_pos - t.getUntransB();
+    Vc = camera_pos - t.getUntransC();
     Va.normalize();
     Vb.normalize();
     Vc.normalize();
+
     // Reflection direction vector
     Point Ra, Rb, Rc;
     Ra = t.getNA() * (2 * (La.dotProduct(t.getNA()))) - La;
@@ -37,12 +40,47 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
     Rb.normalize();
     Rc.normalize();
 
+    float LaDotNA = La.dotProduct(t.getNA());
+    float LbDotNB = Lb.dotProduct(t.getNB());
+    float LcDotNC = Lc.dotProduct(t.getNC());
+
+
+    if (LaDotNA < 0)
+    {
+        LaDotNA = 0;
+    }
+    if (LbDotNB < 0)
+    {
+        LbDotNB = 0;
+    }
+    if (LcDotNC < 0)
+    {
+        LcDotNC = 0;
+    }
+
+    float expRaDotVA = pow(Ra.dotProduct(Va), _Ns);
+    float expRbDotVB = pow(Rb.dotProduct(Vb), _Ns);
+    float expRcDotVC = pow(Rc.dotProduct(Vc), _Ns);
+
+    if (expRaDotVA < 0)
+    {
+        expRaDotVA = 0;
+    }
+    if (expRbDotVB < 0)
+    {
+        expRbDotVB = 0;
+    }
+    if (expRcDotVC < 0)
+    {
+        expRcDotVC = 0;
+    }
+
     // Compute lighting by looping over RGB
     for (int i = 0; i < 3; i++)
     {
-        intensityA[i] = Ka[i] + max(Kd[i] * (La.dotProduct(t.getNA())), 0.f) + max(Ks[i] * pow(Ra.dotProduct(Va), _Ns), 0.f);
-        intensityB[i] = Ka[i] + max(Kd[i] * (Lb.dotProduct(t.getNB())), 0.f) + max(Ks[i] * pow(Rb.dotProduct(Vb), _Ns), 0.f);
-        intensityC[i] = Ka[i] + max(Kd[i] * (Lc.dotProduct(t.getNC())), 0.f) + max(Ks[i] * pow(Rc.dotProduct(Vc), _Ns), 0.f);
+        intensityA[i] = Ka[i] + Kd[i] * LaDotNA + Ks[i] * expRaDotVA;
+        intensityB[i] = Ka[i] + Kd[i] * LbDotNB + Ks[i] * expRbDotVB;
+        intensityC[i] = Ka[i] + Kd[i] * LcDotNC + Ks[i] * expRcDotVC;
     }
 }
 

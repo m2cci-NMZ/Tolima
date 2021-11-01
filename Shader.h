@@ -3,17 +3,18 @@
 #include "Triangle.h"
 #include "TriMesh.h"
 #include <tgmath.h> 
+#include <algorithm>
 
 class Shader{
     private:
-        static Point lightDir;
+        Point lightDir;
         float intensityA[3];
         float intensityB[3];
         float intensityC[3];
         float _Ns; 
-        float Ka[3];
-        float Kd[3];
-        float Ks[3];
+        float Ka[3] = {0.5f, 0.5f, 0.5f};
+        float Kd[3] = {0.5f, 0.5f, 0.5f};
+        float Ks[3] = {0.5f, 0.5f, 0.5f};
 
 
 
