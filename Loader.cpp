@@ -141,6 +141,9 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
         t.setA(verts.at(idx1));
         t.setB(verts.at(idx2));
         t.setC(verts.at(idx3));
+        t.setUntransA(verts.at(idx1));
+        t.setUntransB(verts.at(idx2));
+        t.setUntransC(verts.at(idx3));
 
         if (indices.at(0).size() > 1)
         {
