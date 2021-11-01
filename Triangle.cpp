@@ -17,12 +17,25 @@ Triangle::Triangle(Point _a, Point _b, Point _c)
     a = _a;
     b = _b;
     c = _c;
+
+    untransA = _a;
+    untransB = _c;
+    untransC = _c;
+
 }
 Triangle::Triangle(const Triangle &t)
 {
     a = t.a;
     b = t.b;
     c = t.c;
+
+    untransA = t.untransA;
+    untransB = t.untransB;
+    untransC = t.untransC;
+
+    nA = t.nA;
+    nB = t.nB;
+    nC = t.nC;
 }
 
 Point Triangle::getA()
@@ -39,6 +52,22 @@ Point Triangle::getC()
 {
     return c;
 }
+
+Point Triangle::getUntransA()
+{
+    return untransA;
+}
+
+Point Triangle::getUntransB()
+{
+    return untransB;
+}
+
+Point Triangle::getUntransC()
+{
+    return untransC;
+}
+
 
 Point Triangle::getNA()
 {
@@ -66,6 +95,19 @@ void Triangle::setB(const Point &_b)
 void Triangle::setC(const Point &_c)
 {
     c = _c;
+}
+
+void Triangle::setUntransA(const Point &_a)
+{
+    untransA = _a;
+}
+void Triangle::setUntransB(const Point &_b)
+{
+    untransB = _b;
+}
+void Triangle::setUntransC(const Point &_c)
+{
+    untransC = _c;
 }
 
 void Triangle::setNA(const Point &_nA)
