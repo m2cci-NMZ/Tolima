@@ -154,7 +154,7 @@ TriMesh Camera::worldTransform(TriMesh &in)
         {
 
             Point p1, p2, p3;
-            Triangle t;
+            Triangle t(tri);
             t.setLum(tri.getLum());
             t.setNA(tri.getNA());
             t.setNB(tri.getNB());
@@ -191,11 +191,7 @@ TriMesh Camera::ndcTransform(TriMesh &in, int height, int width)
     for (auto tri : in.getTriangles())
     {
         Point p;
-        Triangle t;
-        t.setLum(tri.getLum());
-        t.setNA(tri.getNA());
-        t.setNB(tri.getNB());
-        t.setNC(tri.getNC());
+        Triangle t(tri);
 
         // Project to view
         matProj.multiplyVector(tri.getA(), &p);
@@ -218,12 +214,9 @@ TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
     for (auto tri : in.getTriangles())
     {
 
-        Triangle t;
+        Triangle t(tri);
         Point p;
-        t.setLum(tri.getLum());
-        t.setNA(tri.getNA());
-        t.setNB(tri.getNB());
-        t.setNC(tri.getNC());
+
         //scale to window size
 
         p.setX(tri.getA().getX() * float(width) / (2.0 * tri.getA().getW()) + (float(width) / 2.0));
