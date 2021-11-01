@@ -76,14 +76,14 @@ void Renderer::eventManager(Camera &camera)
     }
 }
 
-void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer)
+void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos)
 {
 
     for (auto tri : object.getTriangles())
     {
         // SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
         // this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
-        this->renderTriangle(tri, zbuffer);
+        this->renderTriangle(tri, zbuffer, campos);
     }
 }
 int Renderer::closeWindow()
@@ -125,7 +125,7 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
             this->eventManager(camera);
         }
 
-        if (counter > 1000)
+        if (counter > 100)
         {
             counter = 0;
             startTime = SDL_GetTicks();
@@ -137,7 +137,7 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         TriMesh &&proj = camera.worldTransform(object);
         clip.setPlane(pNear, pNearNormal);
-        proj = clip.clipObject(proj);
+        clip.clipObject(proj);
         proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
 
         proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
@@ -155,7 +155,7 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
         clip.clipObject(proj);
         SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 0);
         SDL_RenderClear(this->pRenderer);
-        this->drawObject(proj, zbuffer);
+        this->drawObject(proj, zbuffer, camera.getPosition());
 
         SDL_RenderPresent(this->pRenderer);
 
@@ -180,18 +180,29 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmax = *std::max_element(x, x + 3);
     ymax = *std::max_element(y, y + 3);
 }
-void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer)
+void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos)
 {
     Shader s;
-    s.computeVertIntensities(t);
+    //Point cam(0.f, 0.f,0.f);
+    s.computeVertIntensities(t, campos);
 
     float xmin, xmax, ymin, ymax;
     this->boundingBox(t, xmin, xmax, ymin, ymax);
 
-    float iA, iB, iC;
-    iA = s.getIntensityA();
-    iB = s.getIntensityB();
-    iC = s.getIntensityC();
+    float iAR, iBR, iCR;
+    iAR = s.getIntensityAR();
+    iBR = s.getIntensityBR();
+    iCR = s.getIntensityCR();
+
+    float iAG, iBG, iCG;
+    iAG = s.getIntensityAG();
+    iBG = s.getIntensityBG();
+    iCG = s.getIntensityCG();
+
+    float iAB, iBB, iCB;
+    iAB = s.getIntensityAB();
+    iBB = s.getIntensityBB();
+    iCB = s.getIntensityCB();
 
     float a, b, c, d;
     float zx;
@@ -221,8 +232,10 @@ void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuf
                 w2 /= area;
                 w3 /= area;
 
-                float color = w1 * iA + w2 * iB + w3 * iC;
-                SDL_SetRenderDrawColor(this->pRenderer, int(255 * color), int(255 * color), int(255 * color), 255);
+                float R= w1 * iAR + w2 * iBR + w3 * iCR;
+                float G= w1 * iAG + w2 * iBG + w3 * iCG;
+                float B= w1 * iAB + w2 * iBB + w3 * iCB;
+                SDL_SetRenderDrawColor(this->pRenderer, int(255 * R), int(255 * G), int(255 * B), 255);
                 SDL_RenderDrawPoint(this->pRenderer, i, j);
                 zbuffer[j][i] = zx;
             }
