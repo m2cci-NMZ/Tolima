@@ -12,9 +12,9 @@ class Shader{
         float intensityB[3];
         float intensityC[3];
         float _Ns; 
-        float Ka[3] = {0.5f, 0.5f, 0.5f};
-        float Kd[3] = {0.5f, 0.5f, 0.5f};
-        float Ks[3] = {0.5f, 0.5f, 0.5f};
+        float Ka[3] = {0.25f, 0.25f, 0.25f};
+        float Kd[3] = {0.4f, 0.4f, 0.4f};
+        float Ks[3] = {0.35f, 0.35f, 0.35f};
 
 
 
