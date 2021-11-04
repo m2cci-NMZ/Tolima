@@ -7,11 +7,15 @@ class Object{
     private:
         TriMesh _mesh;
         Shader _shader;
+        string _id;
     public:
-        Object(TriMesh mesh, Shader shader);
+        Object(TriMesh mesh, Shader shader, string id);
+
         void setMesh(const TriMesh& mesh);
         void setShader(const Shader& shader);
+        void setId(const string& id);
 
         TriMesh getMesh();
         Shader getShader();
+        string getId();
 }
