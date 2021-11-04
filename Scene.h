@@ -13,4 +13,5 @@ public:
     void addObject(Object object);
     Object getObject(int i);
     int getNumObjects();
+    bool isObjectId(string name);
 }
