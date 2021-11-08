@@ -1,32 +1,29 @@
 #include "Object.h"
 
-Object::Object(TriMesh mesh, Shader shader, string id)
+Object::Object()
 {
-    _mesh = mesh;
-    _shader = shader;
+    _id = "";
+    _shaderid = "";
+}
+Object::Object(string id, string shader_id)
+{
     _id = id;
+    _shaderid = shader_id;
 }
-void Object::setMesh(const TriMesh &mesh)
-{
-    _mesh = mesh;
-}
+
 void Object::setId(const string &id)
 {
     _id = id;
 }
-void Object::setShader(const Shader &shader)
+string Object::getShaderId()
 {
-    _shader = shader;
-}
-Shader Object::getShader()
-{
-    return _shader;
+    return _shaderid;
 }
 string Object::getId()
 {
     return _id;
 }
-TriMesh Object::getMesh()
+void Object::setShaderId(const string &shader_id)
 {
-    return _mesh;
+    _shaderid = shader_id;
 }

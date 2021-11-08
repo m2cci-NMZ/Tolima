@@ -3,19 +3,19 @@
 #include "Shader.h"
 #include <vector>
 
-class Object{
-    private:
-        TriMesh _mesh;
-        Shader _shader;
-        string _id;
-    public:
-        Object(TriMesh mesh, Shader shader, string id);
+class Object : public TriMesh
+{
+private:
+    string _shaderid;
+    string _id;
 
-        void setMesh(const TriMesh& mesh);
-        void setShader(const Shader& shader);
-        void setId(const string& id);
+public:
+    Object();
+    Object(string id, string shared_id);
 
-        TriMesh getMesh();
-        Shader getShader();
-        string getId();
-}
+    void setShaderId(const string &shaderid);
+    void setId(const string &id);
+
+    string getShaderId();
+    string getId();
+};
