@@ -8,9 +8,18 @@ void Scene::addObject(Object object)
     objects.push_back(object);
     numObjects++;
 }
+void Scene::addShader(Shader shader)
+{
+    shaders.push_back(shader);
+    numShaders++;
+}
 Object Scene::getObject(int i)
 {
     return objects[i];
+}
+Shader Scene::getShader(int i)
+{
+    return shaders[i];
 }
 int Scene::getNumObjects()
 {
@@ -27,6 +36,26 @@ bool Scene::isObjectId(string name)
         else
         {
             return false;
+        }
+    }
+}
+Object Scene::getObjectById(string s)
+{
+    for (int i = 0; i < numObjects; i++)
+    {
+        if (this->getObject(i).getId() == s)
+        {
+            return this->getObject(i);
+        }
+    }
+}
+Shader Scene::getShaderById(string s)
+{
+    for (int i = 0; i < numShaders; i++)
+    {
+        if (this->getShader(i).getId() == s)
+        {
+            return this->getShader(i);
         }
     }
 }
