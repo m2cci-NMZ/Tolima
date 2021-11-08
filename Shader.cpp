@@ -6,6 +6,7 @@ Shader::Shader()
     lightDir.setZ(10.0);
     lightDir.setY(1.0);
     _Ns = 1.f;
+    _id="";
 }
 void Shader::setLightDir(Point p)
 {
@@ -43,7 +44,6 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
     float LaDotNA = La.dotProduct(t.getNA());
     float LbDotNB = Lb.dotProduct(t.getNB());
     float LcDotNC = Lc.dotProduct(t.getNC());
-
 
     if (LaDotNA < 0)
     {
@@ -142,4 +142,12 @@ void Shader::setKs(float r, float g, float b)
     this->Ks[0] = r;
     this->Ks[1] = g;
     this->Ks[2] = b;
+}
+string Shader::getId()
+{
+    return _id;
+}
+void Shader::setId(const string &id)
+{
+    _id = id;
 }

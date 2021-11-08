@@ -15,6 +15,7 @@ class Shader{
         float Ka[3] = {0.25f, 0.25f, 0.25f};
         float Kd[3] = {0.4f, 0.4f, 0.4f};
         float Ks[3] = {0.35f, 0.35f, 0.35f};
+        string _id;
 
 
 
@@ -35,4 +36,6 @@ class Shader{
         void setKd(float r, float g, float b);
         void setKs(float r, float g, float b);
         void setNs(float Ns);
+        void setId(const string& id);
+        string getId();
 };
