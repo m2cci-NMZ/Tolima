@@ -2,4 +2,5 @@
 tolima
 *.py
 *.obj
+*.mtl
 .vscode*
