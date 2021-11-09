@@ -144,5 +144,5 @@ void Clipper::clipObject(TriMesh& object)
             break;
         }
     }
-    object = out;
+    object.setMesh(out);
 }
