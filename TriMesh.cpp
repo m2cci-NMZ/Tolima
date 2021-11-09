@@ -102,6 +102,9 @@ void TriMesh::sortZ()
              });
     }
 }
+void TriMesh::setMesh(const TriMesh& mesh){
+    triangles = mesh.triangles;
+}
 
 TriMesh::~TriMesh()
 {
