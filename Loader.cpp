@@ -1,26 +1,22 @@
 #include "Loader.h"
 #include "TriMesh.h"
 #include "Point.h"
+#include "Scene.h"
 #include <algorithm>
 #include <fstream>
 #include <strstream>
 #include <sstream>
 #include <iostream>
 
-using namespace std;
-
-Loader::Loader(string _filename, TriMesh *_object)
+// TODO: refactor to have a generic Loader abstract class and then specialize obj and mtl loaders
+Loader::Loader(const string filename, Scene &scene)
 {
-    filename = _filename;
-    object = _object;
+    _filename = filename;
+    _scene = scene;
 }
 
 bool Loader::loadMeshFromFile()
 {
-    ifstream f(filename);
-    if (!f.is_open())
-        return false;
-
     // vector containing vertex coordinates
     vector<Point> verts;
     // vector containing normal coordinates
@@ -31,40 +27,82 @@ bool Loader::loadMeshFromFile()
     // vector containing indices
     vector<vector<int>> vind;
 
-    while (!f.eof())
+    vector<string> words;
+    ifstream input;
+    input.open(_filename);
+    if (input.fail())
     {
-        char line[500];
-        f.getline(line, 500);
+        return false;
+    }
+    else
+    {
+        string word;
+        while (input >> word)
+            words.push_back(word);
+        this->loadShaders(words);
+        return true;
+    }
+}
+void Loader::loadObjects(const std::vector<string> &data)
+{
+    for (std::size_t i = 0; i < data.size(); ++i)
+    {
+        if (data[i] == "o")
+        {
+            this->loadObject(data, i + 1);
+        }
+    }
+}
 
-        strstream s;
-        s << line;
+void Loader::loadObject(const std::vector<string> &data, int i)
+{
+    // vector containing vertex coordinates
+    vector<Point> verts;
+    // vector containing normal coordinates
+    vector<Point> normals;
+    // vector containing texture coordinates
+    vector<Point> vtextures;
 
-        switch (this->analyzeLine(line))
+    // vector containing indices
+    vector<vector<int>> vind;
+    Object o;
+    string objectId = data[i];
+    o.setId(objectId);
+    string mtl_fname;
+    while (data[i] != "o")
+    {
+        switch (this->analyzeLine(data[i]))
         {
         case 0:
             break;
         case 1:
-            vind = this->separateFaceElements(line);
-            this->addTriangles(verts, normals, vtextures, vind);
+            vind = this->separateFaceElements(data, i);
+            this->addTriangles(verts, normals, vtextures, vind, objectId);
             break;
         case 2:
-            this->extractPoint(verts, line);
+            this->extractPoint(verts, data, i);
             break;
         case 3:
-            this->extractPoint(normals, line);
+            this->extractPoint(normals, data, i);
             break;
         case 4:
-            this->extractPoint(vtextures, line);
+            this->extractPoint(vtextures, data, i);
+            break;
+        case 5:
+            mtl_fname = data[i + 1];
+            this->readMtl(mtl_fname);
+            break;
+        case 6:
+            o.setShaderId(data[i + 1]);
+            break;
+        default:
             break;
         }
     }
-
-    f.close();
-
-    return true;
+    _scene.addObject(o);
 }
-
-vector<vector<int>> Loader::separateFaceElements(string s)
+/*
+vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data, int i)
 {
     vector<vector<int>> elements;
     istringstream ss(s);
@@ -87,47 +125,72 @@ vector<vector<int>> Loader::separateFaceElements(string s)
             elements.push_back(indices);
         }
     }
-
+    return elements;
+}
+*/
+vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data, int i)
+{
+    vector<vector<int>> elements;
+    string T;
+    int index = i + 1;
+    while (data[index][0] > '1' && data[index][0] < '9')
+    {
+        std::stringstream X(data[index]);
+        vector<int> indices;
+        while (std::getline(X, T, '/'))
+        {
+            if (T != "")
+            {
+                indices.push_back(stoi(T));
+            }
+        }
+        elements.push_back(indices);
+        index++;
+    }
     return elements;
 }
 int Loader::analyzeLine(string s)
 {
-    if (s.substr(0, 2) == "f ")
+    if (s == "f")
     {
         return 1;
     }
-    if (s.substr(0, 2) == "v ")
+    if (s == "v")
     {
         return 2;
     }
-    if (s.substr(0, 2) == "vn")
+    if (s == "vn")
     {
         return 3;
     }
-    if (s.substr(0, 2) == "vt")
+    if (s == "vt")
     {
         return 4;
+    }
+    if (s == "mtllib")
+    {
+        return 5;
+    }
+    if (s == "usemtl")
+    {
+        return 6;
     }
     else
     {
         return 0;
     }
 }
-void Loader::extractPoint(vector<Point> &verts, string line)
+void Loader::extractPoint(vector<Point> &verts, const std::vector<string> &data, int i)
 {
-    strstream s;
-    string junk;
     Point p;
-    float x, y, z;
 
-    s << line;
-    s >> junk >> x >> y >> z;
-    p.setX(x);
-    p.setY(y);
-    p.setZ(z);
+    p.setX(std::stof(data[i + 1]));
+    p.setY(std::stof(data[i + 2]));
+    p.setZ(std::stof(data[i + 3]));
     verts.push_back(p);
 }
-void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices)
+
+void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices, string objectId)
 {
     Triangle t;
     int idx1, idx2, idx3;
@@ -158,6 +221,84 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
         {
             t.computeNormal();
         }
-        object->addTriangle(t);
+        _scene.getObjectById(objectId).addTriangle(t);
     };
+}
+bool Loader::readMtl(string fname)
+{
+    vector<string> words;
+    ifstream input;
+    input.open(fname);
+    if (input.fail())
+    {
+        return false;
+    }
+    else
+    {
+        string word;
+        while (input >> word)
+            words.push_back(word);
+        this->loadShaders(words);
+        return true;
+    }
+}
+void Loader::loadShaders(const std::vector<string> &data)
+{
+    for (std::size_t i = 0; i < data.size(); ++i)
+    {
+        if (data[i] == "newmtl")
+        {
+            this->loadShader(data, i + 1);
+        }
+    }
+}
+void Loader::loadShader(const std::vector<string> &data, int index)
+{
+    Shader s;
+    s.setId(data[index]);
+    while (data[index] != "newmtl")
+    {
+        switch (this->parseMtl(data[index]))
+        {
+        case 0:
+            s.setKa(std::stof(data[index + 1]), std::stof(data[index + 2]), std::stof(data[index + 3]));
+            break;
+        case 1:
+            s.setKd(std::stof(data[index + 1]), std::stof(data[index + 2]), std::stof(data[index + 3]));
+            break;
+        case 2:
+            s.setKs(std::stof(data[index + 1]), std::stof(data[index + 2]), std::stof(data[index + 3]));
+            break;
+        case 3:
+            s.setNs(std::stof(data[index + 1]));
+            break;
+        case 4:
+            break;
+        }
+        index++;
+    }
+    this->_scene.addShader(s);
+}
+int Loader::parseMtl(const string input)
+{
+    if (input == "Ka")
+    {
+        return 0;
+    }
+    else if (input == "Kd")
+    {
+        return 1;
+    }
+    else if (input == "Ks")
+    {
+        return 2;
+    }
+    else if (input == "Ns")
+    {
+        return 3;
+    }
+    else
+    {
+        return 4;
+    }
 }
