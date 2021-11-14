@@ -23,18 +23,17 @@ int main(int argc, char *argv[])
     
     renderer.init();
 
-
-    TriMesh cube;
-
     Camera camera;
 
     Shader shader;
 
     Clipper clip;
+
+    Scene scene;
     
     string f = argv[1];
 
-    Loader loader(f, &cube);
+    Loader loader(f, scene);
     if (!loader.loadMeshFromFile())
     {
         cube.createCube();
