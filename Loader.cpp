@@ -4,7 +4,6 @@
 #include "Scene.h"
 #include <algorithm>
 #include <fstream>
-#include <strstream>
 #include <sstream>
 #include <iostream>
 
@@ -40,6 +39,7 @@ bool Loader::loadMeshFromFile()
         while (input >> word)
             words.push_back(word);
         this->loadShaders(words);
+        this->loadObjects(words);
         return true;
     }
 }
@@ -101,33 +101,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
     }
     _scene.addObject(o);
 }
-/*
-vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data, int i)
-{
-    vector<vector<int>> elements;
-    istringstream ss(s);
-    char del = '/';
-    string token;
-    string f;
-    while (ss >> f)
-    {
-        vector<int> indices;
-        if (f[0] != 'f')
-        {
-            istringstream stmp(f);
-            while (getline(stmp, token, del))
-            {
-                if (token != "")
-                {
-                    indices.push_back(stoi(token));
-                }
-            }
-            elements.push_back(indices);
-        }
-    }
-    return elements;
-}
-*/
+
 vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data, int i)
 {
     vector<vector<int>> elements;
