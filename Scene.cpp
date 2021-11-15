@@ -33,11 +33,8 @@ bool Scene::isObjectId(string name)
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
     }
+    return false;
 }
 Object Scene::getObjectById(string s)
 {
