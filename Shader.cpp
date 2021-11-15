@@ -6,7 +6,7 @@ Shader::Shader()
     lightDir.setZ(10.0);
     lightDir.setY(1.0);
     _Ns = 1.f;
-    _id="";
+    _id = "";
 }
 void Shader::setLightDir(Point p)
 {
@@ -142,6 +142,10 @@ void Shader::setKs(float r, float g, float b)
     this->Ks[0] = r;
     this->Ks[1] = g;
     this->Ks[2] = b;
+}
+void Shader::setNs(float ns)
+{
+    this->_Ns = ns;
 }
 string Shader::getId()
 {
