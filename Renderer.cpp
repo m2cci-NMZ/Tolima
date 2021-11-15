@@ -94,7 +94,7 @@ int Renderer::closeWindow()
     return EXIT_SUCCESS;
 }
 
-void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip)
+void Renderer::renderLoop(Camera camera, Scene scene, Shader shader, Clipper clip)
 {
     // this should be done directly by the Clipper object
     Point pNear, pNearNormal;
@@ -135,6 +135,7 @@ void Renderer::renderLoop(Camera camera, TriMesh object, Shader shader, Clipper 
 
         std::vector<std::vector<float>> zbuffer(this->windowHeight + 1, std::vector<float>(this->windowWidth + 1, 100.0));
 
+        Object object = scene.getObject(0);
         TriMesh &&proj = camera.worldTransform(object);
         clip.setPlane(pNear, pNearNormal);
         clip.clipObject(proj);

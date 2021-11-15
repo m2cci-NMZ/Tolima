@@ -3,6 +3,7 @@
 #include "TriMesh.h"
 #include "Clipper.h"
 #include "Shader.h"
+#include "Scene.h"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -27,7 +28,7 @@ public:
     int init();
     void play();
     void eventManager(Camera &camera);
-    void renderLoop(Camera camera, TriMesh object, Shader shader, Clipper clip);
+    void renderLoop(Camera camera, Scene scene, Shader shader, Clipper clip);
     int closeWindow();
     void boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax);
     void renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos);
