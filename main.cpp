@@ -36,10 +36,10 @@ int main(int argc, char *argv[])
     Loader loader(f, scene);
     if (!loader.loadMeshFromFile())
     {
-        cube.createCube();
+        return 0;
     }
 
-    renderer.renderLoop(camera, cube, shader, clip);
+    renderer.renderLoop(camera, scene, shader, clip);
 
     return renderer.closeWindow();
 }
