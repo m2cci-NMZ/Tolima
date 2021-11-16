@@ -11,10 +11,13 @@ class Loader
 
 private:
     string _filename;
-    Scene _scene;
+    Scene *_scene;
+    vector<Point> verts;
+    vector<Point> normals;
+    vector<Point> vtextures;
 
 public:
-    Loader(const string filename, Scene &scene);
+    Loader(const string filename, Scene *scene);
     bool loadMeshFromFile();
     void loadObjects(const std::vector<string> &data);
     void loadObject(const std::vector<string> &data, int index);
@@ -26,4 +29,5 @@ public:
     void loadShaders(const std::vector<string> &data);
     void loadShader(const std::vector<string> &data, int index);
     int parseMtl(const string input);
+    void loadVertices(const std::vector<string> &data);
 };

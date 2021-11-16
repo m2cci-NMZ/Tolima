@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     
     string f = argv[1];
 
-    Loader loader(f, scene);
+    Loader loader(f, &scene);
     if (!loader.loadMeshFromFile())
     {
         return 0;

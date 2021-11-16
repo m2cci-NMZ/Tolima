@@ -8,7 +8,7 @@
 #include <iostream>
 
 // TODO: refactor to have a generic Loader abstract class and then specialize obj and mtl loaders
-Loader::Loader(const string filename, Scene &scene)
+Loader::Loader(const string filename, Scene *scene)
 {
     _filename = filename;
     _scene = scene;
@@ -16,13 +16,6 @@ Loader::Loader(const string filename, Scene &scene)
 
 bool Loader::loadMeshFromFile()
 {
-    // vector containing vertex coordinates
-    vector<Point> verts;
-    // vector containing normal coordinates
-    vector<Point> normals;
-    // vector containing texture coordinates
-    vector<Point> vtextures;
-
     // vector containing indices
     vector<vector<int>> vind;
 
@@ -38,6 +31,7 @@ bool Loader::loadMeshFromFile()
         string word;
         while (input >> word)
             words.push_back(word);
+        this->loadVertices(words);
         this->loadShaders(words);
         this->loadObjects(words);
         return true;
@@ -53,23 +47,32 @@ void Loader::loadObjects(const std::vector<string> &data)
         }
     }
 }
-
+void Loader::loadVertices(const std::vector<string> &data)
+{
+    for (int i = 0; i < data.size(); i++)
+    {
+        switch (this->analyzeLine(data[i]))
+        {
+        case 2:
+            this->extractPoint(verts, data, i);
+            break;
+        case 3:
+            this->extractPoint(normals, data, i);
+            break;
+        default:
+            break;
+        }
+    }
+}
 void Loader::loadObject(const std::vector<string> &data, int i)
 {
-    // vector containing vertex coordinates
-    vector<Point> verts;
-    // vector containing normal coordinates
-    vector<Point> normals;
-    // vector containing texture coordinates
-    vector<Point> vtextures;
-
     // vector containing indices
     vector<vector<int>> vind;
     Object o;
     string objectId = data[i];
     o.setId(objectId);
     string mtl_fname;
-    while (u_int32_t(i) >= data.size() && data[i] != "o")
+    while (u_int32_t(i) <= data.size() && data[i] != "o")
     {
         switch (this->analyzeLine(data[i]))
         {
@@ -78,15 +81,6 @@ void Loader::loadObject(const std::vector<string> &data, int i)
         case 1:
             vind = this->separateFaceElements(data, i);
             this->addTriangles(verts, normals, vtextures, vind, o);
-            break;
-        case 2:
-            this->extractPoint(verts, data, i);
-            break;
-        case 3:
-            this->extractPoint(normals, data, i);
-            break;
-        case 4:
-            // this->extractPoint(vtextures, data, i);
             break;
         case 5:
             mtl_fname = data[i + 1];
@@ -100,7 +94,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
         }
         i++;
     }
-    _scene.addObject(o);
+    _scene->addObject(o);
 }
 
 vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data, int i)
@@ -252,7 +246,7 @@ void Loader::loadShader(const std::vector<string> &data, int index)
         }
         index++;
     }
-    this->_scene.addShader(s);
+    this->_scene->addShader(s);
 }
 int Loader::parseMtl(const string input)
 {
