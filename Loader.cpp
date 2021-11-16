@@ -69,7 +69,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
     string objectId = data[i];
     o.setId(objectId);
     string mtl_fname;
-    while (data[i] != "o")
+    while (u_int32_t(i) >= data.size() && data[i] != "o")
     {
         switch (this->analyzeLine(data[i]))
         {
@@ -77,7 +77,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
             break;
         case 1:
             vind = this->separateFaceElements(data, i);
-            this->addTriangles(verts, normals, vtextures, vind, objectId);
+            this->addTriangles(verts, normals, vtextures, vind, o);
             break;
         case 2:
             this->extractPoint(verts, data, i);
@@ -86,7 +86,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
             this->extractPoint(normals, data, i);
             break;
         case 4:
-            this->extractPoint(vtextures, data, i);
+            // this->extractPoint(vtextures, data, i);
             break;
         case 5:
             mtl_fname = data[i + 1];
@@ -98,6 +98,7 @@ void Loader::loadObject(const std::vector<string> &data, int i)
         default:
             break;
         }
+        i++;
     }
     _scene.addObject(o);
 }
@@ -107,7 +108,7 @@ vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data
     vector<vector<int>> elements;
     string T;
     int index = i + 1;
-    while (data[index][0] > '1' && data[index][0] < '9')
+    while (index < data.size() && data[index][0] >= '1' && data[index][0] <= '9')
     {
         std::stringstream X(data[index]);
         vector<int> indices;
@@ -164,7 +165,7 @@ void Loader::extractPoint(vector<Point> &verts, const std::vector<string> &data,
     verts.push_back(p);
 }
 
-void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices, string objectId)
+void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &normals, const vector<Point> &textures, const vector<vector<int>> &indices, Object &object)
 {
     Triangle t;
     int idx1, idx2, idx3;
@@ -195,7 +196,7 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
         {
             t.computeNormal();
         }
-        _scene.getObjectById(objectId).addTriangle(t);
+        object.addTriangle(t);
     };
 }
 bool Loader::readMtl(string fname)
