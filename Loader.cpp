@@ -32,7 +32,6 @@ bool Loader::loadMeshFromFile()
         while (input >> word)
             words.push_back(word);
         this->loadVertices(words);
-        this->loadShaders(words);
         this->loadObjects(words);
         return true;
     }
@@ -44,6 +43,10 @@ void Loader::loadObjects(const std::vector<string> &data)
         if (data[i] == "o")
         {
             this->loadObject(data, i + 1);
+        }
+        else if (data[i] == "mtllib")
+        {
+            this->readMtl(data[i + 1]);
         }
     }
 }
@@ -197,7 +200,7 @@ bool Loader::readMtl(string fname)
 {
     vector<string> words;
     ifstream input;
-    input.open(fname);
+    input.open("examples/" + fname);
     if (input.fail())
     {
         return false;
@@ -225,7 +228,7 @@ void Loader::loadShader(const std::vector<string> &data, int index)
 {
     Shader s;
     s.setId(data[index]);
-    while (data[index] != "newmtl")
+    while (index < data.size() && data[index] != "newmtl")
     {
         switch (this->parseMtl(data[index]))
         {
