@@ -4,9 +4,9 @@
 Shader::Shader()
 {
     lightDir.setZ(10.0);
-    lightDir.setY(1.0);
+    lightDir.setY(10.0);
     _Ns = 1.f;
-    _id = "";
+    _id = "default";
 }
 void Shader::setLightDir(Point p)
 {
