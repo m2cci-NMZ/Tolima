@@ -22,4 +22,5 @@ public:
     bool isObjectId(string name);
     Object getObjectById(string name);
     Shader getShaderById(string name);
+    void copyShaders(Scene& scene);
 };

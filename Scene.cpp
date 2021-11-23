@@ -56,3 +56,8 @@ Shader Scene::getShaderById(string s)
         }
     }
 }
+void Scene::copyShaders(Scene& scene){
+    for (int i = 0; i<scene.numShaders; i++){
+        this->addShader(scene.getShader(i));
+    }
+}
