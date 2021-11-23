@@ -76,14 +76,23 @@ void Renderer::eventManager(Camera &camera)
     }
 }
 
-void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos)
+void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s)
 {
 
     for (auto tri : object.getTriangles())
     {
         // SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
         // this->drawTriangle(tri.getA(), tri.getB(), tri.getC());
-        this->renderTriangle(tri, zbuffer, campos);
+        this->renderTriangle(tri, zbuffer, campos, s);
+    }
+}
+void Renderer::drawScene(Scene scene, std::vector<std::vector<float>> &zbuffer, Point campos)
+{
+    for (int i = 0; i < scene.getNumObjects(); i++)
+    {
+        Object o = scene.getObject(i);
+        Shader s = scene.getShaderById(o.getShaderId());
+        this->drawObject(o, zbuffer, campos, s);
     }
 }
 int Renderer::closeWindow()
@@ -94,10 +103,10 @@ int Renderer::closeWindow()
     return EXIT_SUCCESS;
 }
 
-void Renderer::renderLoop(Camera camera, Scene scene, Shader shader, Clipper clip)
+void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
 {
     // this should be done directly by the Clipper object
-    Point pNear, pNearNormal;
+    /*Point pNear, pNearNormal;
     pNear.setZ(0.1);
     pNearNormal.setZ(1.0);
 
@@ -114,7 +123,7 @@ void Renderer::renderLoop(Camera camera, Scene scene, Shader shader, Clipper cli
     Point pDown, pDownNormal;
     pDown.setY(this->windowHeight);
     pDownNormal.setY(-1.0);
-
+*/
     uint32_t startTime = SDL_GetTicks();
     double elapsedTime = 0;
     uint32_t counter = 0;
@@ -135,28 +144,33 @@ void Renderer::renderLoop(Camera camera, Scene scene, Shader shader, Clipper cli
 
         std::vector<std::vector<float>> zbuffer(this->windowHeight + 1, std::vector<float>(this->windowWidth + 1, 100.0));
 
-        Object object = scene.getObject(0);
-        TriMesh &&proj = camera.worldTransform(object);
-        clip.setPlane(pNear, pNearNormal);
-        clip.clipObject(proj);
-        proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
+        //        Object object = scene.getObject(0);
+        //        TriMesh &&proj = camera.worldTransform(object);
+        Scene &&transformedScene = this->transformScene(camera, scene, clip);
+        /*
+                clip.setPlane(pNear, pNearNormal);
+                clip.clipObject(proj);
+                proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
 
-        proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
+                proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
 
-        clip.setPlane(pLeft, pLeftNormal);
-        clip.clipObject(proj);
+                clip.setPlane(pLeft, pLeftNormal);
+                clip.clipObject(proj);
 
-        clip.setPlane(pUp, pUpNormal);
-        clip.clipObject(proj);
+                clip.setPlane(pUp, pUpNormal);
+                clip.clipObject(proj);
 
-        clip.setPlane(pRight, pRightNormal);
-        clip.clipObject(proj);
+                clip.setPlane(pRight, pRightNormal);
+                clip.clipObject(proj);
 
-        clip.setPlane(pDown, pDownNormal);
-        clip.clipObject(proj);
-        SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 0);
+                clip.setPlane(pDown, pDownNormal);
+                clip.clipObject(proj);
+        */
+
+        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 0);
         SDL_RenderClear(this->pRenderer);
-        this->drawObject(proj, zbuffer, camera.getPosition());
+        //this->drawObject(proj, zbuffer, camera.getPosition());
+        this->drawScene(transformedScene,zbuffer,camera.getPosition());
 
         SDL_RenderPresent(this->pRenderer);
 
@@ -181,10 +195,10 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmax = *std::max_element(x, x + 3);
     ymax = *std::max_element(y, y + 3);
 }
-void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos)
+void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s)
 {
-    Shader s;
-    //Point cam(0.f, 0.f,0.f);
+    // Shader s;
+    //  Point cam(0.f, 0.f,0.f);
     s.computeVertIntensities(t, campos);
 
     float xmin, xmax, ymin, ymax;
@@ -233,9 +247,9 @@ void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuf
                 w2 /= area;
                 w3 /= area;
 
-                float R= w1 * iAR + w2 * iBR + w3 * iCR;
-                float G= w1 * iAG + w2 * iBG + w3 * iCG;
-                float B= w1 * iAB + w2 * iBB + w3 * iCB;
+                float R = w1 * iAR + w2 * iBR + w3 * iCR;
+                float G = w1 * iAG + w2 * iBG + w3 * iCG;
+                float B = w1 * iAB + w2 * iBB + w3 * iCB;
                 SDL_SetRenderDrawColor(this->pRenderer, int(255 * R), int(255 * G), int(255 * B), 255);
                 SDL_RenderDrawPoint(this->pRenderer, i, j);
                 zbuffer[j][i] = zx;
@@ -244,4 +258,55 @@ void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuf
         }
         z = z - b / c;
     }
+}
+Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
+{
+    Scene s;
+    for (int i = 0; i < scene.getNumObjects(); i++)
+    {
+        Point pNear, pNearNormal;
+        pNear.setZ(0.1);
+        pNearNormal.setZ(1.0);
+
+        Point pLeft, pLeftNormal;
+        pLeftNormal.setX(1.);
+
+        Point pUp, pUpNormal;
+        pUpNormal.setY(1.0);
+
+        Point pRight, pRightNormal;
+        pRight.setX(float(this->windowWidth));
+        pRightNormal.setX(-1.0);
+
+        Point pDown, pDownNormal;
+        pDown.setY(this->windowHeight);
+        pDownNormal.setY(-1.0);
+
+        Object o = scene.getObject(i);
+        TriMesh &&proj = camera.worldTransform(o);
+        clip.setPlane(pNear, pNearNormal);
+        clip.clipObject(proj);
+        proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
+
+        proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
+
+        clip.setPlane(pLeft, pLeftNormal);
+        clip.clipObject(proj);
+
+        clip.setPlane(pUp, pUpNormal);
+        clip.clipObject(proj);
+
+        clip.setPlane(pRight, pRightNormal);
+        clip.clipObject(proj);
+
+        clip.setPlane(pDown, pDownNormal);
+        clip.clipObject(proj);
+        Object transformedObject;
+        transformedObject.setMesh(proj);
+        transformedObject.setId(o.getId());
+        transformedObject.setShaderId(o.getShaderId());
+        s.addObject(transformedObject);
+    }
+    s.copyShaders(scene);
+    return s;
 }

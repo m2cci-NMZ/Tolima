@@ -24,12 +24,14 @@ public:
     int getHeight();
     void setWidth(int width);
     void setHeight(int height);
-    void drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos);
+    Scene transformScene(Camera &camera, Scene &scene, Clipper clip);
+    void drawScene(Scene scene, std::vector<std::vector<float>> &zbuffer, Point campos);
+    void drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s);
     int init();
     void play();
     void eventManager(Camera &camera);
-    void renderLoop(Camera camera, Scene scene, Shader shader, Clipper clip);
+    void renderLoop(Camera camera, Scene scene, Clipper clip);
     int closeWindow();
     void boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax);
-    void renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos);
+    void renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s);
 };
