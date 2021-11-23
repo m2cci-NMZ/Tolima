@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    renderer.renderLoop(camera, scene, shader, clip);
+    renderer.renderLoop(camera, scene, clip);
 
     return renderer.closeWindow();
 }
