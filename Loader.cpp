@@ -90,12 +90,23 @@ void Loader::loadObject(const std::vector<string> &data, int i)
             this->readMtl(mtl_fname);
             break;
         case 6:
+            if (o.getnTriangles() > 0)
+            {
+                _scene->addObject(o);
+                Object o;
+                o.setId(objectId);
+            }
             o.setShaderId(data[i + 1]);
             break;
         default:
             break;
         }
         i++;
+    }
+    if (o.getShaderId() == "")
+    {
+        // TODO: fix this!
+        o.setShaderId(_scene->getObject(_scene->getNumObjects() - 1).getShaderId());
     }
     _scene->addObject(o);
 }
