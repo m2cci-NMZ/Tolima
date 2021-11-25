@@ -32,8 +32,9 @@ int main(int argc, char *argv[])
     Scene scene;
     
     string f = argv[1];
+    string fshader = argv[2];
 
-    Loader loader(f, &scene);
+    Loader loader(f,fshader, &scene);
     if (!loader.loadMeshFromFile())
     {
         return 0;

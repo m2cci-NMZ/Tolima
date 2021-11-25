@@ -8,10 +8,11 @@
 #include <iostream>
 
 // TODO: refactor to have a generic Loader abstract class and then specialize obj and mtl loaders
-Loader::Loader(const string filename, Scene *scene)
+Loader::Loader(const string filename, const string shaderfname, Scene *scene)
 {
     _filename = filename;
     _scene = scene;
+    _shaderfname= shaderfname;
 }
 
 bool Loader::loadMeshFromFile()
@@ -29,6 +30,7 @@ bool Loader::loadMeshFromFile()
     else
     {
         string word;
+        this->readMtl(_shaderfname);
         while (input >> word)
             words.push_back(word);
         this->loadVertices(words);
@@ -86,8 +88,8 @@ void Loader::loadObject(const std::vector<string> &data, int i)
             this->addTriangles(verts, normals, vtextures, vind, o);
             break;
         case 5:
-            mtl_fname = data[i + 1];
-            this->readMtl(mtl_fname);
+            //mtl_fname = data[i + 1];
+            //this->readMtl(mtl_fname);
             break;
         case 6:
             if (o.getnTriangles() > 0)
@@ -211,7 +213,7 @@ bool Loader::readMtl(string fname)
 {
     vector<string> words;
     ifstream input;
-    input.open("examples/" + fname);
+    input.open(fname);
     if (input.fail())
     {
         return false;

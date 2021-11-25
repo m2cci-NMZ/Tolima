@@ -11,13 +11,14 @@ class Loader
 
 private:
     string _filename;
+    string _shaderfname;
     Scene *_scene;
     vector<Point> verts;
     vector<Point> normals;
     vector<Point> vtextures;
 
 public:
-    Loader(const string filename, Scene *scene);
+    Loader(const string filename,const string shaderfname, Scene *scene);
     bool loadMeshFromFile();
     void loadObjects(const std::vector<string> &data);
     void loadObject(const std::vector<string> &data, int index);
