@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include <algorithm>
+#include <iostream>
 
 Shader::Shader()
 {
@@ -62,15 +63,15 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
     float expRbDotVB = pow(Rb.dotProduct(Vb), _Ns);
     float expRcDotVC = pow(Rc.dotProduct(Vc), _Ns);
 
-    if (expRaDotVA < 0)
+    if (expRaDotVA < 0 || isnan(expRaDotVA))
     {
         expRaDotVA = 0;
     }
-    if (expRbDotVB < 0)
+    if (expRbDotVB < 0 || isnan(expRbDotVB))
     {
         expRbDotVB = 0;
     }
-    if (expRcDotVC < 0)
+    if (expRcDotVC < 0 || isnan(expRcDotVC))
     {
         expRcDotVC = 0;
     }
@@ -78,10 +79,25 @@ void Shader::computeVertIntensities(Triangle &t, Point camera_pos)
     // Compute lighting by looping over RGB
     for (int i = 0; i < 3; i++)
     {
-        intensityA[i] = Ka[i] + Kd[i] * LaDotNA + Ks[i] * expRaDotVA;
-        intensityB[i] = Ka[i] + Kd[i] * LbDotNB + Ks[i] * expRbDotVB;
-        intensityC[i] = Ka[i] + Kd[i] * LcDotNC + Ks[i] * expRcDotVC;
+        /*
+        intensityA[i] = (Ka[i] + Kd[i] * LaDotNA + Ks[i] * expRaDotVA)/3.;
+        intensityB[i] = (Ka[i] + Kd[i] * LbDotNB + Ks[i] * expRbDotVB)/3.;
+        intensityC[i] = (Ka[i] + Kd[i] * LcDotNC + Ks[i] * expRcDotVC)/3.;
+        */
+        
+        intensityA[i] = std::clamp(0.1f*Ka[i] + 0.8f*Kd[i] * LaDotNA + 0.9f*Ks[i] * expRaDotVA,0.f, 1.f);
+
+        intensityB[i] = std::clamp(0.1f*Ka[i] + 0.8f*Kd[i] * LbDotNB + 0.9f*Ks[i] * expRbDotVB,0.f, 1.f);
+
+        intensityC[i] = std::clamp(0.1f*Ka[i] + 0.8f*Kd[i] * LcDotNC + 0.9f*Ks[i] * expRcDotVC,0.f, 1.f);
+        
     }
+    /*
+    if (intensityA[0] > 0.9 && intensityA[1] > 0.9 && intensityA[2] > 0.9)
+    {
+        std::cout << "ok" << std::endl;
+    }
+    */
 }
 
 float Shader::getIntensityAR()
