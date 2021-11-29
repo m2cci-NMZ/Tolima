@@ -12,7 +12,7 @@ Loader::Loader(const string filename, const string shaderfname, Scene *scene)
 {
     _filename = filename;
     _scene = scene;
-    _shaderfname= shaderfname;
+    _shaderfname = shaderfname;
 }
 
 bool Loader::loadMeshFromFile()
@@ -88,8 +88,8 @@ void Loader::loadObject(const std::vector<string> &data, int i)
             this->addTriangles(verts, normals, vtextures, vind, o);
             break;
         case 5:
-            //mtl_fname = data[i + 1];
-            //this->readMtl(mtl_fname);
+            // mtl_fname = data[i + 1];
+            // this->readMtl(mtl_fname);
             break;
         case 6:
             if (o.getnTriangles() > 0)
@@ -127,6 +127,10 @@ vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data
             if (T != "")
             {
                 indices.push_back(stoi(T));
+            }
+            else
+            {
+                indices.push_back(0);
             }
         }
         elements.push_back(indices);
@@ -193,11 +197,11 @@ void Loader::addTriangles(const vector<Point> &verts, const vector<Point> &norma
         t.setUntransB(verts.at(idx2));
         t.setUntransC(verts.at(idx3));
 
-        if (indices.at(0).size() > 1)
+        if (indices.at(0).size() == 3)
         {
-            idx1 = indices.at(0).at(1) - 1;
-            idx2 = indices.at(i - 1).at(1) - 1;
-            idx3 = indices.at(i).at(1) - 1;
+            idx1 = indices.at(0).at(2) - 1;
+            idx2 = indices.at(i - 1).at(2) - 1;
+            idx3 = indices.at(i).at(2) - 1;
             t.setNA(normals.at(idx1));
             t.setNB(normals.at(idx2));
             t.setNC(normals.at(idx3));
