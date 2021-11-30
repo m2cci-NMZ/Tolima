@@ -4,3 +4,4 @@ tolima
 *.obj
 *.mtl
 .vscode*
+profiling/*
