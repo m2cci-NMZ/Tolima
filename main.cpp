@@ -13,6 +13,7 @@
 #include "Clipper.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "Instrumentor.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
     
     string f = argv[1];
     string fshader = argv[2];
-
+    Instrumentor::Get().BeginSession("Session Name");  
     Loader loader(f,fshader, &scene);
     if (!loader.loadMeshFromFile())
     {
@@ -41,6 +42,6 @@ int main(int argc, char *argv[])
     }
 
     renderer.renderLoop(camera, scene, clip);
-
+    Instrumentor::Get().EndSession();
     return renderer.closeWindow();
 }

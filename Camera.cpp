@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 #include <math.h>
+#include "Instrumentor.h"
 
 using namespace std;
 
@@ -143,6 +144,7 @@ Point Camera::getPosition()
 }
 TriMesh Camera::worldTransform(TriMesh &in)
 {
+    PROFILE_FUNCTION();
     TriMesh out;
     for (auto tri : in.getTriangles())
     {
@@ -172,6 +174,7 @@ TriMesh Camera::worldTransform(TriMesh &in)
 }
 TriMesh Camera::ndcTransform(TriMesh &in, int height, int width)
 {
+    PROFILE_FUNCTION();
     TriMesh out;
     Matrix matProj;
     // Projection Matrix
@@ -210,6 +213,7 @@ TriMesh Camera::ndcTransform(TriMesh &in, int height, int width)
 
 TriMesh Camera::viewPortTransform(TriMesh &in, int height, int width)
 {
+    PROFILE_FUNCTION();
     TriMesh out;
     for (auto tri : in.getTriangles())
     {

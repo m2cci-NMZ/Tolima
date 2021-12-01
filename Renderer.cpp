@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <iostream>
+#include "Instrumentor.h"
 
 Renderer::Renderer(int height, int width)
 {
@@ -78,7 +79,7 @@ void Renderer::eventManager(Camera &camera)
 
 void Renderer::drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s)
 {
-
+    PROFILE_FUNCTION();
     for (auto tri : object.getTriangles())
     {
         // SDL_SetRenderDrawColor(this->pRenderer, int(255 * tri.getLum()), int(255 * tri.getLum()), int(255 * tri.getLum()), 255);
@@ -143,7 +144,7 @@ void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
         // TriMesh proj;
 
         std::vector<std::vector<float>> zbuffer(this->windowHeight + 1, std::vector<float>(this->windowWidth + 1, 100.0));
-
+        PROFILE_FUNCTION();
         //        Object object = scene.getObject(0);
         //        TriMesh &&proj = camera.worldTransform(object);
         Scene &&transformedScene = this->transformScene(camera, scene, clip);
@@ -166,7 +167,6 @@ void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
                 clip.setPlane(pDown, pDownNormal);
                 clip.clipObject(proj);
         */
-
         SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 0);
         SDL_RenderClear(this->pRenderer);
         //this->drawObject(proj, zbuffer, camera.getPosition());
@@ -197,8 +197,10 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
 }
 void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s)
 {
+
     // Shader s;
     //  Point cam(0.f, 0.f,0.f);
+    PROFILE_FUNCTION();
     s.computeVertIntensities(t, campos);
 
     float xmin, xmax, ymin, ymax;
@@ -261,6 +263,7 @@ void Renderer::renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuf
 }
 Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
 {
+    PROFILE_FUNCTION();
     Scene s;
     for (int i = 0; i < scene.getNumObjects(); i++)
     {

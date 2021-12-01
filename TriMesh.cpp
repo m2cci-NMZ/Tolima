@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include "Instrumentor.h"
 
 using namespace std;
 
@@ -19,11 +20,13 @@ TriMesh::TriMesh(vector<Triangle> _triangles)
 
 vector<Triangle> TriMesh::getTriangles()
 {
+    PROFILE_FUNCTION();
     return triangles;
 }
 
 Triangle TriMesh::getTriangle(int i)
 {
+    PROFILE_FUNCTION();
     return triangles.at(i);
 }
 

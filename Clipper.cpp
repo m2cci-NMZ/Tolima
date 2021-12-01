@@ -1,4 +1,5 @@
 #include "Clipper.h"
+#include "Instrumentor.h"
 
 Clipper::Clipper()
 {
@@ -128,6 +129,7 @@ int Clipper::clipAgainstPlane(Triangle& in)
 
 void Clipper::clipObject(TriMesh& object)
 {
+    PROFILE_FUNCTION();
     TriMesh out;
     for (auto tri : object.getTriangles())
     {
