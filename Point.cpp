@@ -13,19 +13,19 @@ Point::Point(float _x, float _y, float _z)
     y = _y;
     z = _z;
 }
-float Point::getX()
+float Point::getX() const
 {
     return x;
 }
-float Point::getY()
+float Point::getY() const
 {
     return y;
 }
-float Point::getZ()
+float Point::getZ() const
 {
     return z;
 }
-float Point::getW()
+float Point::getW() const
 {
     return w;
 }

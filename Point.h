@@ -11,10 +11,10 @@ public:
     Point(float _x, float _y, float _z);
     Point();
 
-    float getX();
-    float getY();
-    float getZ();
-    float getW();
+    float getX() const;
+    float getY() const;
+    float getZ() const;
+    float getW() const;
 
     void setX(float _x);
     void setY(float _Y);
