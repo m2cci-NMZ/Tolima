@@ -21,7 +21,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     Renderer renderer(480,720);
-    
+    //Renderer renderer(50,50);
     renderer.init();
 
     Camera camera;

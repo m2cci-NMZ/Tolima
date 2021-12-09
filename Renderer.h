@@ -8,6 +8,9 @@
 #include <cmath>
 #include <vector>
 
+#define MAX_WIDTH 1920
+#define MAX_HEIGHT 1080
+
 class Renderer
 {
 private:
@@ -16,7 +19,9 @@ private:
     SDL_Window *pWindow{nullptr};
     SDL_Renderer *pRenderer{nullptr};
     SDL_Event events;
+    float zBuffer[MAX_WIDTH][MAX_HEIGHT];
     bool isOpen{true};
+    bool wireMode{false};
 
 public:
     Renderer(int hieght, int width);
@@ -25,13 +30,16 @@ public:
     void setWidth(int width);
     void setHeight(int height);
     Scene transformScene(Camera &camera, Scene &scene, Clipper clip);
-    void drawScene(Scene scene, std::vector<std::vector<float>> &zbuffer, Point campos);
-    void drawObject(TriMesh object, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s);
+    void drawScene(Scene scene, Point campos);
+    void drawObject(TriMesh object, Point campos, Shader s);
     int init();
     void play();
     void eventManager(Camera &camera);
     void renderLoop(Camera camera, Scene scene, Clipper clip);
     int closeWindow();
     void boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, float &ymax);
-    void renderTriangle(Triangle &t, std::vector<std::vector<float>> &zbuffer, Point campos, Shader s);
+    void renderTriangle(Triangle &t, Point campos, Shader s);
+    float edge(const Point& a, const Point& b, const Point& c);
+    void resetzBuffer(float depth);
+    void drawWireTriangle(Triangle &t);
 };

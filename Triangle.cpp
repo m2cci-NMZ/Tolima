@@ -2,6 +2,7 @@
 
 #include "Triangle.h"
 #include "Point.h"
+#include "Instrumentor.h"
 
 Triangle::Triangle()
 {
@@ -157,6 +158,7 @@ Point Triangle::getNormal()
 
 void Triangle::derivePlane(float &A, float &B, float &C, float &D)
 {
+    PROFILE_FUNCTION();
     Point d0 = this->b - this->a;
     Point d1 = this->c - this->a;
     Point normal;
