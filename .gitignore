@@ -5,3 +5,4 @@ tolima
 *.mtl
 .vscode*
 profiling/*
+gmon.out
