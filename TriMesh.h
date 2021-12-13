@@ -20,7 +20,7 @@ public:
     void addTriangle(Triangle _triangle);
     void setMesh(const TriMesh& mesh);
 
-    vector<Triangle > getTriangles();
+    vector<Triangle >& getTriangles();
     Triangle getTriangle(int i);
 
     int getnTriangles();

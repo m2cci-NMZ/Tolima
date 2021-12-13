@@ -18,9 +18,8 @@ TriMesh::TriMesh(vector<Triangle> _triangles)
     triangles = _triangles;
 }
 
-vector<Triangle> TriMesh::getTriangles()
+vector<Triangle>& TriMesh::getTriangles()
 {
-    PROFILE_FUNCTION();
     return triangles;
 }
 
