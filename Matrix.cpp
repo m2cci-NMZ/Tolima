@@ -29,7 +29,7 @@ void Matrix::setValue(int row, int col, float value)
     matrixArray[row][col] = value;
 }
 
-void Matrix::multiplyVector(Point in, Point *out)
+void Matrix::multiplyVector(Point &in)
 {
     float x = in.getX() * matrixArray[0][0] + in.getY() * matrixArray[1][0] + in.getZ() * matrixArray[2][0] + matrixArray[3][0] * in.getW();
 
@@ -39,10 +39,10 @@ void Matrix::multiplyVector(Point in, Point *out)
 
     float w = in.getX() * matrixArray[0][3] + in.getY() * matrixArray[1][3] + in.getZ() * matrixArray[2][3] + matrixArray[3][3] * in.getW();
 
-    out->setX(x);
-    out->setY(y);
-    out->setZ(z);
-    out->setW(w);
+    in.setX(x);
+    in.setY(y);
+    in.setZ(z);
+    in.setW(w);
 }
 
 void Matrix::multiplyMatrices(Matrix in, Matrix *out)
