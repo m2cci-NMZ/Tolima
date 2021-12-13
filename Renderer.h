@@ -19,7 +19,7 @@ private:
     SDL_Window *pWindow{nullptr};
     SDL_Renderer *pRenderer{nullptr};
     SDL_Event events;
-    float zBuffer[MAX_WIDTH][MAX_HEIGHT];
+    float zBuffer[MAX_HEIGHT][MAX_WIDTH];
     bool isOpen{true};
     bool wireMode{false};
 

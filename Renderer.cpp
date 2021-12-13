@@ -135,7 +135,7 @@ void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
         this->resetzBuffer(100000.f);
         Scene &&transformedScene = this->transformScene(camera, scene, clip);
 
-        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 0);
+        SDL_SetRenderDrawColor(pRenderer, 255/2, 255/2, 255/2, 0);
         SDL_RenderClear(this->pRenderer);
         this->drawScene(transformedScene, camera.getPosition());
 
@@ -213,7 +213,7 @@ void Renderer::renderTriangle(Triangle &t, Point campos, Shader s)
                 w2 = edge(t.getC(), t.getA(), p);
                 w3 = edge(t.getA(), t.getB(), p);
                 area = edge(t.getA(), t.getB(), t.getC());
-                if (w1 >= 0 && w2 >= 0 && w3 >= 0 && zx < zBuffer[j][i])
+                if (w1 >= 0 && w2 >= 0 && w3 >= 0 && zx < zBuffer[i][j])
                 {
                     // PROFILE_SCOPE("compute RGB");
                     w1 /= area;
@@ -226,7 +226,7 @@ void Renderer::renderTriangle(Triangle &t, Point campos, Shader s)
 
                     SDL_SetRenderDrawColor(this->pRenderer, int(255 * R), int(255 * G), int(255 * B), 255);
                     SDL_RenderDrawPoint(this->pRenderer, i, j);
-                    zBuffer[j][i] = zx;
+                    zBuffer[i][j] = zx;
                 }
                 zx = zx - a / c;
             }
@@ -258,13 +258,13 @@ Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
         pDown.setY(this->windowHeight);
         pDownNormal.setY(-1.0);
 
-        Object o = scene.getObject(i);
-        TriMesh &&proj = camera.worldTransform(o);
+        Object proj = scene.getObject(i);
+        camera.worldTransform(proj);
         clip.setPlane(pNear, pNearNormal);
         clip.clipObject(proj);
-        proj = camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
+        camera.ndcTransform(proj, this->windowHeight, this->windowWidth);
 
-        proj = camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
+        camera.viewPortTransform(proj, this->windowHeight, this->windowWidth);
 
         clip.setPlane(pLeft, pLeftNormal);
         clip.clipObject(proj);
@@ -279,8 +279,8 @@ Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
         clip.clipObject(proj);
         Object transformedObject;
         transformedObject.setMesh(proj);
-        transformedObject.setId(o.getId());
-        transformedObject.setShaderId(o.getShaderId());
+        transformedObject.setId(proj.getId());
+        transformedObject.setShaderId(proj.getShaderId());
         s.addObject(transformedObject);
     }
     s.copyShaders(scene);
