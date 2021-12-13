@@ -39,17 +39,17 @@ Triangle::Triangle(const Triangle &t)
     nC = t.nC;
 }
 
-Point Triangle::getA()
+Point& Triangle::getA()
 {
     return a;
 }
 
-Point Triangle::getB()
+Point& Triangle::getB()
 {
     return b;
 }
 
-Point Triangle::getC()
+Point& Triangle::getC()
 {
     return c;
 }

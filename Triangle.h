@@ -20,9 +20,9 @@ public:
     Triangle(Point _a, Point _b, Point _c);
     Triangle(const Triangle& t);
 
-    Point getA();
-    Point getB();
-    Point getC();
+    Point& getA();
+    Point& getB();
+    Point& getC();
 
     Point getUntransA();
     Point getUntransB();
