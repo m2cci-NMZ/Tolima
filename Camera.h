@@ -28,9 +28,9 @@ public:
     Matrix makerotationYMatrix(float rot);
     Matrix makeFPSTransform(Point position, float pitch, float yaw);
 
-    void transform(Point in, Point *out);
+    void transform(Point &in);
     Point getPosition();
-    TriMesh worldTransform(TriMesh& in);
-    TriMesh ndcTransform(TriMesh& in, int height, int width);
-    TriMesh viewPortTransform(TriMesh& in, int height, int width);
+    void worldTransform(TriMesh& in);
+    void ndcTransform(TriMesh& in, int height, int width);
+    void viewPortTransform(TriMesh& in, int height, int width);
 };
