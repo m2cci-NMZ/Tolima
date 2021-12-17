@@ -5,7 +5,7 @@ Clipper::Clipper()
 {
 }
 
-void Clipper::setPlane(Point _plane, Point _normal)
+void Clipper::setPlane(const Point& _plane, const Point& _normal)
 {
     plane = _plane;
     normal = _normal;
@@ -49,11 +49,10 @@ int Clipper::clipAgainstPlane(Triangle& in)
     //one point outside, triangle must be clipped to form 2 new triangles t1 and t2 and return 2
     else if (d1 * d2 * d3 < 0)
     {
-        Point p1, p2;
         if (d1 < 0)
         {
-            p1 = this->intersectPlane(in.getB(), in.getA());
-            p2 = this->intersectPlane(in.getC(), in.getA());
+            Point&& p1 = this->intersectPlane(in.getB(), in.getA());
+            Point&& p2 = this->intersectPlane(in.getC(), in.getA());
 
             t1.setA(p1);
             t1.setB(in.getB());
@@ -65,8 +64,8 @@ int Clipper::clipAgainstPlane(Triangle& in)
         }
         else if (d2 < 0)
         {
-            p1 = this->intersectPlane(in.getC(), in.getB());
-            p2 = this->intersectPlane(in.getA(), in.getB());
+            Point&& p1 = this->intersectPlane(in.getC(), in.getB());
+            Point&& p2 = this->intersectPlane(in.getA(), in.getB());
 
             t1.setA(p1);
             t1.setB(in.getC());
@@ -78,8 +77,8 @@ int Clipper::clipAgainstPlane(Triangle& in)
         }
         else
         {
-            p1 = this->intersectPlane(in.getA(), in.getC());
-            p2 = this->intersectPlane(in.getB(), in.getC());
+            Point&& p1 = this->intersectPlane(in.getA(), in.getC());
+            Point&& p2 = this->intersectPlane(in.getB(), in.getC());
 
             t1.setA(p1);
             t1.setB(in.getA());
@@ -94,11 +93,10 @@ int Clipper::clipAgainstPlane(Triangle& in)
     //two points outside,
     else
     {
-        Point p1, p2;
         if (d1 > 0)
         {
-            p1 = this->intersectPlane(in.getA(), in.getB());
-            p2 = this->intersectPlane(in.getA(), in.getC());
+            Point&& p1 = this->intersectPlane(in.getA(), in.getB());
+            Point&& p2 = this->intersectPlane(in.getA(), in.getC());
 
             t1.setA(in.getA());
             t1.setB(p1);
@@ -106,8 +104,8 @@ int Clipper::clipAgainstPlane(Triangle& in)
         }
         else if (d2 > 0)
         {
-            p1 = this->intersectPlane(in.getA(), in.getB());
-            p2 = this->intersectPlane(in.getB(), in.getC());
+            Point&& p1 = this->intersectPlane(in.getA(), in.getB());
+            Point&& p2 = this->intersectPlane(in.getB(), in.getC());
 
             t1.setA(p1);
             t1.setB(in.getB());
@@ -115,8 +113,8 @@ int Clipper::clipAgainstPlane(Triangle& in)
         }
         else
         {
-            p1 = this->intersectPlane(in.getB(), in.getC());
-            p2 = this->intersectPlane(in.getA(), in.getC());
+            Point&& p1 = this->intersectPlane(in.getB(), in.getC());
+            Point&& p2 = this->intersectPlane(in.getA(), in.getC());
 
             t1.setA(p2);
             t1.setB(p1);
@@ -131,7 +129,7 @@ void Clipper::clipObject(TriMesh& object)
 {
     PROFILE_FUNCTION();
     TriMesh out;
-    for (auto tri : object.getTriangles())
+    for (auto& tri : object.getTriangles())
     {
         switch (this->clipAgainstPlane(tri))
         {

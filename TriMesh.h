@@ -17,7 +17,7 @@ public:
 
     TriMesh copy();
 
-    void addTriangle(Triangle _triangle);
+    void addTriangle(const Triangle& _triangle);
     void setMesh(const TriMesh& mesh);
 
     vector<Triangle >& getTriangles();
@@ -28,6 +28,4 @@ public:
     void createCube();
 
     void sortZ();
-
-    ~TriMesh();
 };

@@ -10,10 +10,9 @@ Triangle::Triangle()
     Point b = Point();
     Point c = Point();
     Point normal = Point();
-    float light = 1;
 }
 
-Triangle::Triangle(Point _a, Point _b, Point _c)
+Triangle::Triangle(const Point& _a, const Point& _b, const Point& _c)
 {
     a = _a;
     b = _b;
@@ -151,7 +150,7 @@ void Triangle::computeNormal()
 
 Point Triangle::getNormal()
 {
-    Point nMean = (nA + nB + nC) / 3;
+    Point nMean = nA + nB + nC;
     nMean.normalize();
     return nMean;
 }

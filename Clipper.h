@@ -13,7 +13,7 @@ private:
 
 public:
     Clipper();
-    void setPlane(Point _plane, Point _normal);
+    void setPlane(const Point& _plane, const Point& _normal);
     float distanceToPlane(Point p);
     Point intersectPlane(Point p1, Point p2);
     int clipAgainstPlane(Triangle& in);

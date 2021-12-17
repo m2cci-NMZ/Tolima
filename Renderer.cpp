@@ -71,7 +71,7 @@ void Renderer::eventManager(Camera &camera)
                 camera.moveUp(1);
                 break;
             case SDLK_r:
-                this->wireMode = true;
+                this->wireMode = !this->wireMode;
                 break;
             case SDLK_t:
                 this->wireMode = false;
@@ -83,9 +83,9 @@ void Renderer::eventManager(Camera &camera)
     }
 }
 
-void Renderer::drawObject(TriMesh object, Point campos, Shader s)
+void Renderer::drawObject(TriMesh& object, const Point& campos, Shader& s)
 {
-    for (auto tri : object.getTriangles())
+    for (auto &tri : object.getTriangles())
     {
         if (this->wireMode)
         {
@@ -97,7 +97,7 @@ void Renderer::drawObject(TriMesh object, Point campos, Shader s)
         }
     }
 }
-void Renderer::drawScene(Scene scene, Point campos)
+void Renderer::drawScene(Scene& scene, const Point& campos)
 {
     for (int i = 0; i < scene.getNumObjects(); i++)
     {
@@ -114,7 +114,7 @@ int Renderer::closeWindow()
     return EXIT_SUCCESS;
 }
 
-void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
+void Renderer::renderLoop(Camera& camera, Scene& scene, Clipper& clip)
 {
     uint32_t startTime = SDL_GetTicks();
     double elapsedTime = 0;
@@ -132,10 +132,10 @@ void Renderer::renderLoop(Camera camera, Scene scene, Clipper clip)
             startTime = SDL_GetTicks();
         }
 
-        this->resetzBuffer(100000.f);
+        this->resetzBuffer(10000000000.f);
         Scene &&transformedScene = this->transformScene(camera, scene, clip);
 
-        SDL_SetRenderDrawColor(pRenderer, 255/2, 255/2, 255/2, 0);
+        SDL_SetRenderDrawColor(pRenderer, 255 / 2, 255 / 2, 255 / 2, 0);
         SDL_RenderClear(this->pRenderer);
         this->drawScene(transformedScene, camera.getPosition());
 
@@ -163,7 +163,7 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmax = *std::max_element(x, x + 3);
     ymax = *std::max_element(y, y + 3);
 }
-void Renderer::renderTriangle(Triangle &t, Point campos, Shader s)
+void Renderer::renderTriangle(Triangle &t, Point campos, Shader& s)
 {
     PROFILE_FUNCTION();
     s.computeVertIntensities(t, campos);
@@ -237,28 +237,27 @@ void Renderer::renderTriangle(Triangle &t, Point campos, Shader s)
 Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
 {
     PROFILE_FUNCTION();
+    Point pNear, pNearNormal;
+    pNear.setZ(0.1);
+    pNearNormal.setZ(1.0);
+
+    Point pLeft, pLeftNormal;
+    pLeftNormal.setX(1.);
+
+    Point pUp, pUpNormal;
+    pUpNormal.setY(1.0);
+
+    Point pRight, pRightNormal;
+    pRight.setX(float(this->windowWidth));
+    pRightNormal.setX(-1.0);
+
+    Point pDown, pDownNormal;
+    pDown.setY(this->windowHeight);
+    pDownNormal.setY(-1.0);
     Scene s;
     for (int i = 0; i < scene.getNumObjects(); i++)
     {
-        Point pNear, pNearNormal;
-        pNear.setZ(0.1);
-        pNearNormal.setZ(1.0);
-
-        Point pLeft, pLeftNormal;
-        pLeftNormal.setX(1.);
-
-        Point pUp, pUpNormal;
-        pUpNormal.setY(1.0);
-
-        Point pRight, pRightNormal;
-        pRight.setX(float(this->windowWidth));
-        pRightNormal.setX(-1.0);
-
-        Point pDown, pDownNormal;
-        pDown.setY(this->windowHeight);
-        pDownNormal.setY(-1.0);
-
-        Object proj = scene.getObject(i);
+        Object&& proj = scene.getObject(i);
         camera.worldTransform(proj);
         clip.setPlane(pNear, pNearNormal);
         clip.clipObject(proj);

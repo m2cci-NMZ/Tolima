@@ -17,7 +17,7 @@ private:
 
 public:
     Triangle();
-    Triangle(Point _a, Point _b, Point _c);
+    Triangle(const Point& _a, const Point& _b, const Point& _c);
     Triangle(const Triangle& t);
 
     Point& getA();

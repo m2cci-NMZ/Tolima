@@ -13,8 +13,8 @@ private:
 
 public:
     Scene();
-    void addObject(Object object);
-    void addShader(Shader shader);
+    void addObject(const Object& object);
+    void addShader(const Shader& shader);
     Object getObject(int i);
     Shader getShader(int i);
     int getNumObjects();

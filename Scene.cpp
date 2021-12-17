@@ -3,12 +3,12 @@
 Scene::Scene()
 {
 }
-void Scene::addObject(Object object)
+void Scene::addObject(const Object& object)
 {
     objects.push_back(object);
     numObjects++;
 }
-void Scene::addShader(Shader shader)
+void Scene::addShader(const Shader& shader)
 {
     shaders.push_back(shader);
     numShaders++;
@@ -45,6 +45,8 @@ Object Scene::getObjectById(string s)
             return this->getObject(i);
         }
     }
+    throw std::invalid_argument("Invalid object id");
+    return this->getObject(0);
 }
 Shader Scene::getShaderById(string s)
 {
@@ -55,9 +57,13 @@ Shader Scene::getShaderById(string s)
             return this->getShader(i);
         }
     }
+    throw std::invalid_argument("Invalid shader id");
+    return this->getShader(0);
 }
-void Scene::copyShaders(Scene& scene){
-    for (int i = 0; i<scene.numShaders; i++){
+void Scene::copyShaders(Scene &scene)
+{
+    for (int i = 0; i < scene.numShaders; i++)
+    {
         this->addShader(scene.getShader(i));
     }
 }

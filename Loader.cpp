@@ -54,7 +54,7 @@ void Loader::loadObjects(const std::vector<string> &data)
 }
 void Loader::loadVertices(const std::vector<string> &data)
 {
-    for (int i = 0; i < data.size(); i++)
+    for (long unsigned int i = 0; i < data.size(); i++)
     {
         switch (this->analyzeLine(data[i]))
         {
@@ -117,7 +117,7 @@ vector<vector<int>> Loader::separateFaceElements(const std::vector<string> &data
 {
     vector<vector<int>> elements;
     string T;
-    int index = i + 1;
+    long unsigned int index = i + 1;
     while (index < data.size() && data[index][0] >= '1' && data[index][0] <= '9')
     {
         std::stringstream X(data[index]);
@@ -245,7 +245,7 @@ void Loader::loadShader(const std::vector<string> &data, int index)
 {
     Shader s;
     s.setId(data[index]);
-    while (index < data.size() && data[index] != "newmtl")
+    while ((long unsigned int) index < data.size() && data[index] != "newmtl")
     {
         switch (this->parseMtl(data[index]))
         {

@@ -33,7 +33,7 @@ int TriMesh::getnTriangles()
 {
     return nTriangles;
 }
-void TriMesh::addTriangle(Triangle _triangle)
+void TriMesh::addTriangle(const Triangle& _triangle)
 {
     triangles.push_back(_triangle);
     nTriangles++;
@@ -106,18 +106,4 @@ void TriMesh::sortZ()
 }
 void TriMesh::setMesh(const TriMesh& mesh){
     triangles = mesh.triangles;
-}
-
-TriMesh::~TriMesh()
-{
-    /*if (position)
-        delete position;
-    for (unsigned long int i = 0; i < triangles->size(); i++)
-    {
-        if (triangles->at(i))
-            delete triangles->at(i);
-    }
-
-    if (triangles)
-        delete triangles;*/
 }
