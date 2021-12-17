@@ -83,7 +83,7 @@ void Renderer::eventManager(Camera &camera)
     }
 }
 
-void Renderer::drawObject(TriMesh& object, const Point& campos, Shader& s)
+void Renderer::drawObject(TriMesh &object, const Point &campos, Shader &s)
 {
     for (auto &tri : object.getTriangles())
     {
@@ -97,7 +97,7 @@ void Renderer::drawObject(TriMesh& object, const Point& campos, Shader& s)
         }
     }
 }
-void Renderer::drawScene(Scene& scene, const Point& campos)
+void Renderer::drawScene(Scene &scene, const Point &campos)
 {
     for (int i = 0; i < scene.getNumObjects(); i++)
     {
@@ -114,7 +114,7 @@ int Renderer::closeWindow()
     return EXIT_SUCCESS;
 }
 
-void Renderer::renderLoop(Camera& camera, Scene& scene, Clipper& clip)
+void Renderer::renderLoop(Camera &camera, Scene &scene, Clipper &clip)
 {
     uint32_t startTime = SDL_GetTicks();
     double elapsedTime = 0;
@@ -163,7 +163,7 @@ void Renderer::boundingBox(Triangle &t, float &xmin, float &xmax, float &ymin, f
     xmax = *std::max_element(x, x + 3);
     ymax = *std::max_element(y, y + 3);
 }
-void Renderer::renderTriangle(Triangle &t, Point campos, Shader& s)
+void Renderer::renderTriangle(Triangle &t, Point campos, Shader &s)
 {
     PROFILE_FUNCTION();
     s.computeVertIntensities(t, campos);
@@ -196,41 +196,59 @@ void Renderer::renderTriangle(Triangle &t, Point campos, Shader& s)
     int xminint = int(xmin);
     int yminint = int(ymin);
 
+    Point p;
+
+    p.setX(xminint);
+    p.setY(yminint);
+    float w1, w2, w3, area, w1x, w2x, w3x;
+    w1 = edge(t.getB(), t.getC(), p);
+    w2 = edge(t.getC(), t.getA(), p);
+    w3 = edge(t.getA(), t.getB(), p);
+    area = edge(t.getA(), t.getB(), t.getC());
+
+    float x1, x2, x3;
+    x1 = t.getA().getX();
+    x2 = t.getB().getX();
+    x3 = t.getC().getX();
+
+    float y1, y2, y3;
+    y1 = t.getA().getY();
+    y2 = t.getB().getY();
+    y3 = t.getC().getY();
+
     {
         PROFILE_SCOPE("drawing loop");
         for (int i = xminint; i <= xmaxint; i++)
         {
             // PROFILE_SCOPE("outer loop");
             zx = z;
+            w1x = w1;
+            w2x = w2;
+            w3x = w3;
             for (int j = yminint; j <= ymaxint; j++)
             {
                 // PROFILE_SCOPE("inner loop");
-                Point p;
-                p.setX(i);
-                p.setY(j);
-                float w1, w2, w3, area;
-                w1 = edge(t.getB(), t.getC(), p);
-                w2 = edge(t.getC(), t.getA(), p);
-                w3 = edge(t.getA(), t.getB(), p);
-                area = edge(t.getA(), t.getB(), t.getC());
-                if (w1 >= 0 && w2 >= 0 && w3 >= 0 && zx < zBuffer[i][j])
+                if (w1x >= 0 && w2x >= 0 && w3x >= 0 && zx < zBuffer[i][j])
                 {
                     // PROFILE_SCOPE("compute RGB");
-                    w1 /= area;
-                    w2 /= area;
-                    w3 /= area;
 
-                    float R = w1 * iAR + w2 * iBR + w3 * iCR;
-                    float G = w1 * iAG + w2 * iBG + w3 * iCG;
-                    float B = w1 * iAB + w2 * iBB + w3 * iCB;
+                    float R = (w1x/area) * iAR + (w2x/area) * iBR + (w3x/area) * iCR;
+                    float G = (w1x/area) * iAG + (w2x/area) * iBG + (w3x/area) * iCG;
+                    float B = (w1x/area) * iAB + (w2x/area) * iBB + (w3x/area) * iCB;
 
                     SDL_SetRenderDrawColor(this->pRenderer, int(255 * R), int(255 * G), int(255 * B), 255);
                     SDL_RenderDrawPoint(this->pRenderer, i, j);
                     zBuffer[i][j] = zx;
                 }
                 zx = zx - a / c;
+                w1x = w1x - (x3 - x2);
+                w2x = w2x - (x1 - x3);
+                w3x = w3x - (x2 - x1);
             }
             z = z - b / c;
+            w1 = w1 + (y3 - y2);
+            w2 = w2 + (y1 - y3);
+            w3 = w3 + (y2 - y1);
         }
     }
 }
@@ -257,7 +275,7 @@ Scene Renderer::transformScene(Camera &camera, Scene &scene, Clipper clip)
     Scene s;
     for (int i = 0; i < scene.getNumObjects(); i++)
     {
-        Object&& proj = scene.getObject(i);
+        Object &&proj = scene.getObject(i);
         camera.worldTransform(proj);
         clip.setPlane(pNear, pNearNormal);
         clip.clipObject(proj);
