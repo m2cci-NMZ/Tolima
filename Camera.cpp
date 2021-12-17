@@ -147,13 +147,13 @@ void Camera::worldTransform(TriMesh &in)
 {
     PROFILE_FUNCTION();
     // for (auto& tri : in.getTriangles())
-    for (int i = 0; i < in.getTriangles().size(); i++)
+    for (long unsigned int i = 0; i < in.getTriangles().size(); i++)
     {
-        Point vCam = in.getTriangles()[i].getA() - position;
-        vCam.normalize();
+        //Point vCam = in.getTriangles()[i].getA() - position;
+        //vCam.normalize();
         // tri.computeNormal();
 
-        if (target.dotProduct(in.getTriangles()[i].getNormal()) < 0)
+        if (target.dotProduct(in.getTriangles()[i].getNormal()) <= 0)
         {
             this->transform(in.getTriangles()[i].getA());
             this->transform(in.getTriangles()[i].getB());
@@ -161,7 +161,9 @@ void Camera::worldTransform(TriMesh &in)
         }
         else
         {
-            in.getTriangles().erase(in.getTriangles().begin() + i);
+            auto it = in.getTriangles().begin() + i;
+            *it = std::move(in.getTriangles().back());
+            in.getTriangles().pop_back();
             i--;
         }
     }
