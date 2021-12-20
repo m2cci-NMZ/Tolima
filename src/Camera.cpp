@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 #include <math.h>
-#include "Instrumentor.h"
+#include "../include/Instrumentor.h"
 
 using namespace std;
 

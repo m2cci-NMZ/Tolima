@@ -4,16 +4,16 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Matrix.h"
-#include "TriMesh.h"
-#include "Point.h"
-#include "Triangle.h"
-#include "Loader.h"
-#include "Camera.h"
-#include "Clipper.h"
-#include "Shader.h"
-#include "Renderer.h"
-#include "Instrumentor.h"
+#include "../include/Matrix.h"
+#include "../include/TriMesh.h"
+#include "../include/Point.h"
+#include "../include/Triangle.h"
+#include "../include/Loader.h"
+#include "../include/Camera.h"
+#include "../include/Clipper.h"
+#include "../include/Shader.h"
+#include "../include/Renderer.h"
+#include "../include/Instrumentor.h"
 
 using namespace std;
 

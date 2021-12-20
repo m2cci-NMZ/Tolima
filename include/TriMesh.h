@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "Triangle.h"
+#include "../include/Triangle.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #pragma once
-#include "TriMesh.h"
-#include "Shader.h"
+#include "../include/TriMesh.h"
+#include "../include/Shader.h"
 #include <vector>
 
 class Object : public TriMesh

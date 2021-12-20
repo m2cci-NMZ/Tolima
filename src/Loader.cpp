@@ -1,7 +1,7 @@
-#include "Loader.h"
-#include "TriMesh.h"
-#include "Point.h"
-#include "Scene.h"
+#include "../include/Loader.h"
+#include "../include/TriMesh.h"
+#include "../include/Point.h"
+#include "../include/Scene.h"
 #include <algorithm>
 #include <fstream>
 #include <sstream>

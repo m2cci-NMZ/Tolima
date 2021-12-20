@@ -1,5 +1,5 @@
 #include "Clipper.h"
-#include "Instrumentor.h"
+#include "../include/Instrumentor.h"
 
 Clipper::Clipper()
 {

@@ -1,9 +1,9 @@
 #include <SDL2/SDL.h>
-#include "Camera.h"
-#include "TriMesh.h"
-#include "Clipper.h"
-#include "Shader.h"
-#include "Scene.h"
+#include "../include/Camera.h"
+#include "../include/TriMesh.h"
+#include "../include/Clipper.h"
+#include "../include/Shader.h"
+#include "../include/Scene.h"
 #include <algorithm>
 #include <cmath>
 #include <vector>

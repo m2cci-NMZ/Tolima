@@ -1,8 +1,8 @@
 #include <cmath>
 
-#include "Triangle.h"
-#include "Point.h"
-#include "Instrumentor.h"
+#include "../include/Triangle.h"
+#include "../include/Point.h"
+#include "../include/Instrumentor.h"
 
 Triangle::Triangle()
 {

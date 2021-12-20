@@ -1,7 +1,7 @@
 #pragma once
-#include "Point.h"
-#include "Triangle.h"
-#include "TriMesh.h"
+#include "../include/Point.h"
+#include "../include/Triangle.h"
+#include "../include/TriMesh.h"
 
 class Clipper
 {

@@ -1,8 +1,8 @@
 #pragma once
 #include <fstream>
 
-#include "TriMesh.h"
-#include "Scene.h"
+#include "../include/TriMesh.h"
+#include "../include/Scene.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "Point.h"
-#include "TriMesh.h"
-#include "Matrix.h"
+#include "../include/Point.h"
+#include "../include/TriMesh.h"
+#include "../include/Matrix.h"
 
 class Camera
 {

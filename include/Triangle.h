@@ -1,5 +1,5 @@
 #pragma once
-#include "Point.h"
+#include "../include/Point.h"
 
 class Triangle
 {

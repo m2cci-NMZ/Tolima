@@ -1,6 +1,6 @@
 #pragma once
-#include "Object.h"
-#include "Shader.h"
+#include "../include/Object.h"
+#include "../include/Shader.h"
 #include <vector>
 
 class Scene
