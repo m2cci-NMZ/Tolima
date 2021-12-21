@@ -7,6 +7,6 @@ tolima
 profiling/*
 gmon.out
 CMakeFiles
-Makefile
+/Makefile
 CMakeCache.txt
 cmake_install.cmake

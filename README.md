@@ -18,6 +18,7 @@ Keyboard navigation in the scene:
 - `e` rotates right
 - `w` translates up
 - `x` translates down
+- `r` toggles wireframe mode
 
 ## Known problems
 - Since no default shaders are implemented, not specifying the mtl file or having an mtl file with missing Phong illumination parameters (Ks, Kd or Ka) will cause the program to crash
