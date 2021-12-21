@@ -6,3 +6,7 @@ tolima
 .vscode*
 profiling/*
 gmon.out
+CMakeFiles
+Makefile
+CMakeCache.txt
+cmake_install.cmake
