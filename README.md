@@ -4,7 +4,7 @@ Tolima is a from scratch (using no third party libaries such as OpenGL) 3D engin
 To navigate in the scene, you can use standard FPS controls.
 
 ## Dependencies
-SDL
+[SDL](https://www.libsdl.org/)
 
 ## Usage
 ./tolima file.obj file.mtl
